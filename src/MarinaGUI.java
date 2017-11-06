@@ -7,9 +7,9 @@ import java.awt.event.*;
 public class MarinaGUI extends JFrame{
 	
 	String[] customerColumnNames = {"Customer ID", "First Name", "Last Name", "Payment Info", "Phone Number", "Street Address", "City", "State", "ZIP Code"};
-	String[] boatColumnNames = {"Boat","Test"};
-	String[] slipColumnNames = {"Test"};
-	String[] leaseColumnNames = {"Test"};
+	String[] boatColumnNames = {"Vin","Customer ID", "Make", "Model", "Color","Is Powered Boat"};
+	String[] slipColumnNames = {"Slip ID", "Is Powered Slip?", "Is Occupied?"};
+	String[] leaseColumnNames = {"Lease ID","Customer ID", "Vin","Slip ID","Lease Start Date", "Lease End Date"};
 	
 	private JButton createButton = new JButton("Create");
 	private JButton deleteButton = new JButton("Delete");
@@ -27,36 +27,57 @@ public class MarinaGUI extends JFrame{
 	
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	
-	String[] columnNames = {"First Name",
-            "Last Name",
-            "Sport",
-            "# of Years",
-            "Vegetarian"};
-	Object[][] data = {
-		    {"Kathy", "Smith",
-		     "Snowboarding", new Integer(5), new Boolean(false)},
-		    {"John", "Doe",
-		     "Rowing", new Integer(3), new Boolean(true)},
-		    {"Sue", "Black",
-		     "Knitting", new Integer(2), new Boolean(false)},
-		    {"Jane", "White",
-		     "Speed reading", new Integer(20), new Boolean(true)},
-		    {"Joe", "Brown",
-		     "Pool", new Integer(10), new Boolean(false)}
-		};
+	Object[][] customerData = {
+			{"1","Kathy", "Smith","XXXXXXXXXXXX1028","717-302-0001","3002 Front St.","Harrisburg","PA","17011"},
+			{"2", "John", "Doe","XXXXXXXXXXXX3421", "717-998-0967", "1012 1st St.","Middletown","PA","17057"},
+		    };
+	private JTable customerTable = new JTable(customerData, customerColumnNames);
 	
-	private JTable customerTable = new JTable(data, columnNames);
-	private JTable boatTable = new JTable(null, boatColumnNames);
-	private JTable slipTable = new JTable(null, slipColumnNames);
-	private JTable leaseTable = new JTable(null, leaseColumnNames);
+	Object[][] boatData = {
+				    {"MAI5NS6TF708", "1","Ranger","Rt 188","White",new Boolean(true)},
+				    {"ABC67689B606", "2","Wellcraft", "Martinique 3000","Black/Red", new Boolean(false)}
+	};		
+	private JTable boatTable = new JTable(boatData, boatColumnNames);
+	
+	Object[][] slipData = {
+		    {"1A", new Boolean(true), new Boolean(true)},
+		    {"1B", new Boolean(false), new Boolean(false)},
+		    {"2A", new Boolean(false), new Boolean(false)},
+		    {"2B", new Boolean(false), new Boolean(false)},
+		    {"3A", new Boolean(true), new Boolean(false)},
+		    {"3B", new Boolean(false), new Boolean(true)}
+	};	
+	private JTable slipTable = new JTable(slipData, slipColumnNames);
+	
+	Object[][] leaseData = {
+		    {"001", "1", "MAI5NS6TF708", "1A","11/5/2017","11/6/2017"},
+		    {"002", "2", "ABC67689B606", "3B","7/5/2017","12/28/2017"}
+	};	
+	private JTable leaseTable = new JTable(leaseData, leaseColumnNames);
 	
 	private void buildGUI(){
 		customerPanel.add(customerTable);
+		customerPanel.setLayout(new BorderLayout());
+		customerPanel.add(customerTable.getTableHeader(), BorderLayout.PAGE_START);
+		customerPanel.add(customerTable, BorderLayout.CENTER);
+		
 		
 		tabbedPane.addTab("Customers", customerPanel);
 		tabbedPane.addTab("Boats", boatPanel);
+		boatPanel.setLayout(new BorderLayout());
+		boatPanel.add(boatTable.getTableHeader(), BorderLayout.PAGE_START);
+		boatPanel.add(boatTable, BorderLayout.CENTER);
+		
 		tabbedPane.addTab("Slips", slipPanel);
+		slipPanel.setLayout(new BorderLayout());
+		slipPanel.add(slipTable.getTableHeader(), BorderLayout.PAGE_START);
+		slipPanel.add(slipTable, BorderLayout.CENTER);
+		
 		tabbedPane.addTab("Leases", leasePanel);
+		leasePanel.setLayout(new BorderLayout());
+		leasePanel.add(leaseTable.getTableHeader(), BorderLayout.PAGE_START);
+		leasePanel.add(leaseTable, BorderLayout.CENTER);
+		
 		tabbedPane.setUI(new BasicTabbedPaneUI() {
 	        private final Insets borderInsets = new Insets(0, 0, 0, 0);
 	        @Override
