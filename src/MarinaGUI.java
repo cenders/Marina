@@ -4,18 +4,19 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MarinaGUI extends JFrame{
+	private JLabel outOfLabel = new JLabel("0 of 0");
 	
-	String[] customerColumnNames = {"Customer ID", "First Name", "Last Name", "Payment Info", "Phone Number", "Street Address", "City", "State", "ZIP Code"};
-	String[] boatColumnNames = {"Vin","Customer ID", "Make", "Model", "Color","Is Powered Boat"};
-	String[] slipColumnNames = {"Slip ID", "Is Powered Slip?", "Is Occupied?"};
-	String[] leaseColumnNames = {"Lease ID","Customer ID", "Vin","Slip ID","Lease Start Date", "Lease End Date"};
-	
+	private JButton previousButton = new JButton("<");
+	private JButton nextButton = new JButton(">");
 	private JButton createButton = new JButton("Create");
 	private JButton deleteButton = new JButton("Delete");
 	private JButton findButton = new JButton("Find");
 	private JButton editButton = new JButton("Edit");
+	private JButton executeSearchButton = new JButton("Find");
 	
 	private JPanel contentPanel = new JPanel();
 	private JPanel tablePanel = new JPanel();
@@ -25,56 +26,42 @@ public class MarinaGUI extends JFrame{
 	private JPanel boatPanel = new JPanel();
 	private JPanel slipPanel = new JPanel();
 	private JPanel leasePanel = new JPanel();
+	private JPanel topPanel = new JPanel();
+	
+	private JDialog searchDialog = new JDialog(this);
 	
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	
-	private DefaultTableModel customerModel = new DefaultTableModel(customerColumnNames, 0);
-	private JTable customerTable = new JTable(customerModel);
+	private JTextField searchField = new JTextField(30);
 	
-	Object[][] boatData = {
-				    {"MAI5NS6TF708", "1","Ranger","Rt 188","White",new Boolean(true)},
-				    {"ABC67689B606", "2","Wellcraft", "Martinique 3000","Black/Red", new Boolean(false)}
-	};		
-	private JTable boatTable = new JTable(boatData, boatColumnNames);
-	
-	Object[][] slipData = {
-		    {"1A", new Boolean(true), new Boolean(true)},
-		    {"1B", new Boolean(false), new Boolean(false)},
-		    {"2A", new Boolean(false), new Boolean(false)},
-		    {"2B", new Boolean(false), new Boolean(false)},
-		    {"3A", new Boolean(true), new Boolean(false)},
-		    {"3B", new Boolean(false), new Boolean(true)}
-	};	
-	private JTable slipTable = new JTable(slipData, slipColumnNames);
-	
-	Object[][] leaseData = {
-		    {"001", "1", "MAI5NS6TF708", "1A","11/5/2017","11/6/2017"},
-		    {"002", "2", "ABC67689B606", "3B","7/5/2017","12/28/2017"}
-	};	
-	private JTable leaseTable = new JTable(leaseData, leaseColumnNames);
+	ChoiceListener listener = new ChoiceListener();
 	
 	private void buildGUI(){
-		customerPanel.add(customerTable);
-		customerPanel.setLayout(new BorderLayout());
-		customerPanel.add(customerTable.getTableHeader(), BorderLayout.PAGE_START);
-		customerPanel.add(customerTable, BorderLayout.CENTER);
+		outOfLabel.setVerticalAlignment(JLabel.CENTER);
+		outOfLabel.setHorizontalAlignment(JLabel.CENTER);
 		
+		searchPanel.setLayout(new BorderLayout());
+		searchPanel.add(searchField, BorderLayout.CENTER);
+		searchPanel.add(executeSearchButton, BorderLayout.EAST);
+		
+		topPanel.setLayout(new BorderLayout());
+		topPanel.add(previousButton, BorderLayout.WEST);
+		topPanel.add(outOfLabel, BorderLayout.CENTER);
+		topPanel.add(nextButton, BorderLayout.EAST);
+		
+		customerPanel.setLayout(new BorderLayout());
+		customerPanel.add(topPanel, BorderLayout.NORTH);
 		
 		tabbedPane.addTab("Customers", customerPanel);
+		
 		tabbedPane.addTab("Boats", boatPanel);
 		boatPanel.setLayout(new BorderLayout());
-		boatPanel.add(boatTable.getTableHeader(), BorderLayout.PAGE_START);
-		boatPanel.add(boatTable, BorderLayout.CENTER);
 		
 		tabbedPane.addTab("Slips", slipPanel);
 		slipPanel.setLayout(new BorderLayout());
-		slipPanel.add(slipTable.getTableHeader(), BorderLayout.PAGE_START);
-		slipPanel.add(slipTable, BorderLayout.CENTER);
 		
 		tabbedPane.addTab("Leases", leasePanel);
 		leasePanel.setLayout(new BorderLayout());
-		leasePanel.add(leaseTable.getTableHeader(), BorderLayout.PAGE_START);
-		leasePanel.add(leaseTable, BorderLayout.CENTER);
 		
 		tabbedPane.setUI(new BasicTabbedPaneUI() {
 	        private final Insets borderInsets = new Insets(0, 0, 0, 0);
@@ -117,6 +104,9 @@ public class MarinaGUI extends JFrame{
 		
 		contentPanel.add(buttonPanel, constraints);
 		add(contentPanel);
+		
+		findButton.addActionListener(listener);
+		executeSearchButton.addActionListener(listener);
 	}
 	
 	
@@ -128,11 +118,34 @@ public class MarinaGUI extends JFrame{
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	class ChoiceListener implements ActionListener{
+		DatabaseManager db = new DatabaseManager();
+		public void actionPerformed(ActionEvent event){
+			if(event.getSource() == findButton){
+				searchDialog.setTitle("Search");
+				//searchDialog.add(searchPanel);
+				searchDialog.setLayout(new BorderLayout());
+				searchDialog.add(searchField, BorderLayout.WEST);
+				searchDialog.add(executeSearchButton, BorderLayout.EAST);
+				searchDialog.pack();
+				searchDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				searchDialog.setVisible(true);
+				System.out.println("Find Button");
+			}
+			
+			if(event.getSource() == executeSearchButton){
+				System.out.println("Search executed");
+				Customer[] results = db.findCustomers(searchField.getText());
+				for(int i = 0; i < results.length; i++){
+					System.out.println(results[i].toString());
+				}
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		MarinaGUI gui = new MarinaGUI();
-		DatabaseManager db = new DatabaseManager();
-		db.findAllCustomers();
 	}
 
 }

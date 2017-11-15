@@ -12,6 +12,7 @@ public class DatabaseManager {
 	static final String DATABASE_URL = "jdbc:ucanaccess://../Database/Marina.accdb";
 	Connection connection = null;
 	Statement statement = null;
+	Statement selectAllCustomers = null;
 	ResultSet resultSet = null;
 	PreparedStatement selectCustomers = null;
 	PreparedStatement selectBoats = null;
@@ -34,69 +35,63 @@ public class DatabaseManager {
 		}
 	}
 	
-	public void findAllCustomers(){
-		try {
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from Customer");
-			while(rs.next())
-				System.out.println(rs.getInt(1) + ' ' + rs.getString(2) + ' ' + rs.getString(3));
-			connection.close();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public DefaultTableModel findCustomers(String term){
+	public Customer[] findCustomers(String term){
 		try{
-			System.out.println("Searching customers");
-			if(term == null){
-				selectCustomers = connection.prepareStatement("SELECT * FROM CUSTOMER");
-				System.out.println("Wildcard");
-			}
-			else{
-				selectCustomers = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE customer_id LIKE %"
-															  + term + "% OR first_name LIKE %"
-															  + term + "% OR last_name LIKE %"
-															  + term + "% OR payment_info_name LIKE %"
-															  + term + "% OR phone_number LIKE %"
-															  + term + "% OR street_address LIKE %"
-															  + term + "% OR city LIKE %"
-															  + term + "% OR state LIKE %"
-															  + term + "% OR zip LIKE %"
-															  + term + "%");
-				System.out.println("LIKE");
-			}
+			// Create search query to return all data associated with a string/substring
+			// Example: %tree% will return objects for "trees", "street", and "stree"
+			selectCustomers = connection.prepareStatement("SELECT * FROM Customer WHERE "
+							+ "first_name LIKE ? OR "
+							+ "last_name LIKE ? OR "
+							+ "payment_info LIKE ? OR "
+							+ "phone_number LIKE ? OR "
+							+ "street_address LIKE ? OR "
+							+ "city LIKE ? OR "
+							+ "state LIKE ? OR "
+							+ "zip LIKE ?",
+							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+						    ResultSet.CONCUR_READ_ONLY);
+			// Set the term values
+			selectCustomers.setString(1, "%" + term + "%");
+			selectCustomers.setString(2, "%" + term + "%");
+			selectCustomers.setString(3, "%" + term + "%");
+			selectCustomers.setString(4, "%" + term + "%");
+			selectCustomers.setString(5, "%" + term + "%");
+			selectCustomers.setString(6, "%" + term + "%");
+			selectCustomers.setString(7, "%" + term + "%");
+			selectCustomers.setString(8, "%" + term + "%");
 			resultSet = selectCustomers.executeQuery();
-			resultSet.next();
-			System.out.println("Query executed");
 			
+			// Calculate the number of rows in the ResultSet
 			int rowCount = getRowCount(resultSet);
-			String[] customerColumnNames = {"Customer ID", "First Name", "Last Name", "Payment Info", "Phone Number", "Street Address", "City", "State", "ZIP Code"};
-			Object[] tableData = new Object[9];		
-			DefaultTableModel model = new DefaultTableModel(customerColumnNames, 0);
 			
-			System.out.println("Row Count:" + rowCount);
+			// Create array of Customer objects
+			Customer[] results = new Customer[rowCount];
 			
+			// Iterate through the ResultSet and create the full Customer object
 			for(int i = 0; i < rowCount; i++){
-				tableData[0] = resultSet.getInt(1);
-				tableData[1] = resultSet.getString(2);
-				tableData[2] = resultSet.getString(3);
-				tableData[3] = resultSet.getString(4);
-				tableData[4] = resultSet.getString(5);
-				tableData[5] = resultSet.getString(6);
-				tableData[6] = resultSet.getString(7);
-				tableData[7] = resultSet.getString(8);
-				tableData[8] = resultSet.getString(9);
+				// Get next result
+				resultSet.next();
 				
-				//model.addRow(tableData);
+				// Instantiate new Customer object
+				results[i] = new Customer();
+				
+				// Add values to Customer object
+				results[i].setCustomerID(Integer.toString(resultSet.getInt(1)));
+				results[i].setFirstName(resultSet.getString(2));
+				results[i].setLastName(resultSet.getString(3));
+				results[i].setPaymentInfo(resultSet.getString(4));
+				results[i].setPhoneNumber(resultSet.getString(5));
+				results[i].setStreetAddress(resultSet.getString(6));
+				results[i].setCity(resultSet.getString(7));
+				results[i].setState(resultSet.getString(8));
+				results[i].setZip(resultSet.getString(9));
 			}
-			
-			return model;
+			return results;
 		}
 		catch(SQLException sqlex){
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database Search Failed", JOptionPane.ERROR_MESSAGE);
-			return new DefaultTableModel();
+			System.out.println(sqlex.getLocalizedMessage());
+			return new Customer[0];
 		}
 	}
 	
@@ -137,37 +132,16 @@ public class DatabaseManager {
 	}
 	
 	private int getRowCount(ResultSet rs){
-		int i = 0;
-		
+		int size = 0;
 		try {
-			while(rs.next()){
-				System.out.println("Count: " + i);
-				if(rs.isAfterLast() == true)
-					System.out.println("After Last");
-				i++;
-			}
+			rs.last();
+			size = resultSet.getRow();
 			rs.beforeFirst();
-			System.out.println("i: " + i);
-			System.out.println("Cursor at first");
 		} 
-		catch (SQLException sqlex) {
-			System.out.println(sqlex);
+		catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
 		}
-		
-		return i;
+		return size;
 	}
-	
-	/*
-	private int getRowCount(String table){
-		try{
-			selectCount = connection.prepareStatement("SELECT COUNT() FROM " + table);
-			resultSet = selectCount.executeQuery();
-			return resultSet.getInt(columnIndex);
-		}
-		catch(SQLException sqlex){
-			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database Search Failed", JOptionPane.ERROR_MESSAGE);
-			return resultSet;
-		}
-	}
-	*/
 }

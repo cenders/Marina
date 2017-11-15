@@ -152,4 +152,9 @@ public class Customer {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
+	
+	@Override
+	public String toString(){
+		return getFirstName() + " " + getLastName() + " " + getPaymentInfo() + " " + getPhoneNumber() + " " + getStreetAddress() + " " + getCity() + " " + getState() + " "  + getZip();
+	}
 }
