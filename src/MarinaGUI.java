@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -27,11 +28,8 @@ public class MarinaGUI extends JFrame{
 	
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	
-	Object[][] customerData = {
-			{"1","Kathy", "Smith","XXXXXXXXXXXX1028","717-302-0001","3002 Front St.","Harrisburg","PA","17011"},
-			{"2", "John", "Doe","XXXXXXXXXXXX3421", "717-998-0967", "1012 1st St.","Middletown","PA","17057"},
-		    };
-	private JTable customerTable = new JTable(customerData, customerColumnNames);
+	private DefaultTableModel customerModel = new DefaultTableModel(customerColumnNames, 0);
+	private JTable customerTable = new JTable(customerModel);
 	
 	Object[][] boatData = {
 				    {"MAI5NS6TF708", "1","Ranger","Rt 188","White",new Boolean(true)},
@@ -134,7 +132,7 @@ public class MarinaGUI extends JFrame{
 	public static void main(String[] args) {
 		MarinaGUI gui = new MarinaGUI();
 		DatabaseManager db = new DatabaseManager();
-
+		db.findAllCustomers();
 	}
 
 }
