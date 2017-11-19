@@ -40,6 +40,7 @@ public class DatabaseManager {
 			// Create search query to return all data associated with a string/substring
 			// Example: %tree% will return objects for "trees", "street", and "stree"
 			selectCustomers = connection.prepareStatement("SELECT * FROM Customer WHERE "
+							+ "customer_id LIKE ? OR "
 							+ "first_name LIKE ? OR "
 							+ "last_name LIKE ? OR "
 							+ "payment_info LIKE ? OR "
@@ -59,6 +60,7 @@ public class DatabaseManager {
 			selectCustomers.setString(6, "%" + term + "%");
 			selectCustomers.setString(7, "%" + term + "%");
 			selectCustomers.setString(8, "%" + term + "%");
+			selectCustomers.setString(9, "%" + term + "%");
 			resultSet = selectCustomers.executeQuery();
 			
 			// Calculate the number of rows in the ResultSet
@@ -95,39 +97,157 @@ public class DatabaseManager {
 		}
 	}
 	
-	public ResultSet findBoats(){
+	public Boat[] findBoats(String term){
 		try{
-			selectBoats = connection.prepareStatement("SELECT * FROM BOAT");
+			// Create search query to return all data associated with a string/substring
+			// Example: %tree% will return objects for "trees", "street", and "stree"
+			selectBoats = connection.prepareStatement("SELECT * FROM Boat WHERE "
+							+ "vin LIKE ? OR "
+							+ "customer_id LIKE ? OR "
+							+ "make LIKE ? OR "
+							+ "model LIKE ? OR "
+							+ "color LIKE ? OR "
+							+ "is_powered LIKE ?",
+							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+						    ResultSet.CONCUR_READ_ONLY);
+			// Set the term values
+			selectBoats.setString(1, "%" + term + "%");
+			selectBoats.setString(2, "%" + term + "%");
+			selectBoats.setString(3, "%" + term + "%");
+			selectBoats.setString(4, "%" + term + "%");
+			selectBoats.setString(5, "%" + term + "%");
+			selectBoats.setString(6, "%" + term + "%");
 			resultSet = selectBoats.executeQuery();
-			return resultSet;
+			
+			// Calculate the number of rows in the ResultSet
+			int rowCount = getRowCount(resultSet);
+			
+			// Create array of Boat objects
+			Boat[] results = new Boat[rowCount];
+			
+			// Iterate through the ResultSet and create the full Boat object
+			for(int i = 0; i < rowCount; i++){
+				// Get next result
+				resultSet.next();
+				
+				// Instantiate new Boat object
+				results[i] = new Boat();
+				System.out.println(resultSet.getString(3));
+				
+				// Add values to Boat object
+				results[i].setVin(resultSet.getString(1));
+				results[i].setCustomerID(resultSet.getString(2));
+				results[i].setMake(resultSet.getString(3));
+				results[i].setModel(resultSet.getString(4));
+				results[i].setColor(resultSet.getString(5));
+				results[i].setIsPowered(resultSet.getString(6));
+			}
+			return results;
 		}
 		catch(SQLException sqlex){
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database Search Failed", JOptionPane.ERROR_MESSAGE);
-			return resultSet;
+			System.out.println(sqlex.getLocalizedMessage());
+			return new Boat[0];
 		}
 	}
 	
-	public ResultSet findSlips(){
+	public Slip[] findSlips(String term){
 		try{
-			selectSlips = connection.prepareStatement("SELECT * FROM SLIP");
+			// Create search query to return all data associated with a string/substring
+			// Example: %tree% will return objects for "trees", "street", and "stree"
+			selectSlips = connection.prepareStatement("SELECT * FROM Slip WHERE "
+							+ "slip_id LIKE ? OR "
+							+ "is_powered_boat LIKE ? OR "
+							+ "is_leased LIKE ? OR "
+							+ "is_occupied LIKE ?",
+							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+						    ResultSet.CONCUR_READ_ONLY);
+			// Set the term values
+			selectSlips.setString(1, "%" + term + "%");
+			selectSlips.setString(2, "%" + term + "%");
+			selectSlips.setString(3, "%" + term + "%");
+			selectSlips.setString(4, "%" + term + "%");
 			resultSet = selectSlips.executeQuery();
-			return resultSet;
+			
+			// Calculate the number of rows in the ResultSet
+			int rowCount = getRowCount(resultSet);
+			
+			// Create array of Slip objects
+			Slip[] results = new Slip[rowCount];
+			
+			// Iterate through the ResultSet and create the full Slip object
+			for(int i = 0; i < rowCount; i++){
+				// Get next result
+				resultSet.next();
+				
+				// Instantiate new Slip object
+				results[i] = new Slip();
+				
+				// Add values to Slip object
+				results[i].setSlipID(Integer.toString(1));
+				results[i].setIsPowered(Integer.toString(2));
+				results[i].setIsLeased(Integer.toString(3));
+				results[i].setIsOccupied(Integer.toString(4));
+			}
+			return results;
 		}
 		catch(SQLException sqlex){
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database Search Failed", JOptionPane.ERROR_MESSAGE);
-			return resultSet;
+			System.out.println(sqlex.getLocalizedMessage());
+			return new Slip[0];
 		}
 	}
 	
-	public ResultSet findLeases(){
+	public Lease[] findLeases(String term){
 		try{
-			selectLeases = connection.prepareStatement("SELECT * FROM LEASE");
+			// Create search query to return all data associated with a string/substring
+			// Example: %tree% will return objects for "trees", "street", and "stree"
+			selectLeases = connection.prepareStatement("SELECT * FROM Lease WHERE "
+							+ "lease_id LIKE ? OR "
+							+ "customer_id LIKE ? OR "
+							+ "vin LIKE ? OR "
+							+ "slip_id LIKE ? OR "
+							+ "lease_start_date LIKE ? OR "
+							+ "lease_end_date LIKE ?",
+							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+						    ResultSet.CONCUR_READ_ONLY);
+			// Set the term values
+			selectLeases.setString(1, "%" + term + "%");
+			selectLeases.setString(2, "%" + term + "%");
+			selectLeases.setString(3, "%" + term + "%");
+			selectLeases.setString(4, "%" + term + "%");
+			selectLeases.setString(5, "%" + term + "%");
+			selectLeases.setString(6, "%" + term + "%");
 			resultSet = selectLeases.executeQuery();
-			return resultSet;
+			
+			// Calculate the number of rows in the ResultSet
+			int rowCount = getRowCount(resultSet);
+			
+			// Create array of Lease objects
+			Lease[] results = new Lease[rowCount];
+			
+			// Iterate through the ResultSet and create the full Lease object
+			for(int i = 0; i < rowCount; i++){
+				// Get next result
+				resultSet.next();
+				
+				// Instantiate new Lease object
+				results[i] = new Lease();
+				
+				// Add values to Lease object
+				results[i].setLeaseID(Integer.toString(resultSet.getInt(1)));
+				results[i].setCustomerID(Integer.toString(resultSet.getInt(2)));
+				results[i].setVin(Integer.toString(resultSet.getInt(3)));
+				results[i].setSlipID(Integer.toString(resultSet.getInt(4)));
+				results[i].setLeaseStartDate(resultSet.getString(5));
+				results[i].setLeaseEndDate(resultSet.getString(6));
+			}
+			return results;
 		}
 		catch(SQLException sqlex){
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database Search Failed", JOptionPane.ERROR_MESSAGE);
-			return resultSet;
+			System.out.println(sqlex.getLocalizedMessage());
+			return new Lease[0];
 		}
 	}
 	
@@ -138,8 +258,8 @@ public class DatabaseManager {
 			size = resultSet.getRow();
 			rs.beforeFirst();
 		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		catch (SQLException sqlex) {
+			sqlex.printStackTrace();
 			return 0;
 		}
 		return size;

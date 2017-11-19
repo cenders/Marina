@@ -1,11 +1,7 @@
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class MarinaGUI extends JFrame{
 	private JLabel outOfLabel = new JLabel("0 of 0");
@@ -124,7 +120,6 @@ public class MarinaGUI extends JFrame{
 		public void actionPerformed(ActionEvent event){
 			if(event.getSource() == findButton){
 				searchDialog.setTitle("Search");
-				//searchDialog.add(searchPanel);
 				searchDialog.setLayout(new BorderLayout());
 				searchDialog.add(searchField, BorderLayout.WEST);
 				searchDialog.add(executeSearchButton, BorderLayout.EAST);
@@ -135,11 +130,63 @@ public class MarinaGUI extends JFrame{
 			}
 			
 			if(event.getSource() == executeSearchButton){
-				System.out.println("Search executed");
-				Customer[] results = db.findCustomers(searchField.getText());
-				for(int i = 0; i < results.length; i++){
-					System.out.println(results[i].toString());
+				int selection = tabbedPane.getSelectedIndex();
+				
+				switch(selection){
+				case 0:
+					System.out.println("1");
+					Customer[] customerResults = db.findCustomers(searchField.getText());
+					for(int i = 0; i < customerResults.length; i++){
+						System.out.println(customerResults[i].toString());
+					}
+					break;
+				case 1:
+					System.out.println("2");
+					Boat[] boatResults = db.findBoats(searchField.getText());
+					for(int i = 0; i < boatResults.length; i++){
+						System.out.println(boatResults[i].toString());
+					}
+					break;
+				case 2:
+					System.out.println("3");
+					Slip[] slipResults = db.findSlips(searchField.getText());
+					for(int i = 0; i < slipResults.length; i++){
+						System.out.println(slipResults[i].toString());
+					}
+					break;
+				case 3:
+					System.out.println("4");
+					Lease[] leaseResults = db.findLeases(searchField.getText());
+					for(int i = 0; i < leaseResults.length; i++){
+						System.out.println(leaseResults[i].toString());
+					}
 				}
+				/*
+				if(selection == 0){
+					Customer[] results = db.findCustomers(searchField.getText());
+					for(int i = 0; i < results.length; i++){
+						System.out.println(results[i].toString());
+					}
+				}
+				if(selection == 1){
+					Boat[] results = db.findBoats(searchField.getText());
+					for(int i = 0; i < results.length; i++){
+						System.out.println(results[i].toString());
+					}
+				}
+				if(selection == 2){
+					Slip[] results = db.findSlips(searchField.getText());
+					for(int i = 0; i < results.length; i++){
+						System.out.println(results[i].toString());
+					}
+				}
+				if(selection == 3){
+					Lease[] results = db.findLeases(searchField.getText());
+					for(int i = 0; i < results.length; i++){
+						System.out.println(results[i].toString());
+					}
+				}
+				*/
 			}
 		}
 	}
