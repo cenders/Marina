@@ -12,11 +12,12 @@ public class MarinaGUI extends JFrame{
 	private JButton deleteButton = new JButton("Delete");
 	private JButton findButton = new JButton("Find");
 	private JButton editButton = new JButton("Edit");
+	private JButton updateButton = new JButton("Update");
 	private JButton executeSearchButton = new JButton("Find");
 	
 	private JPanel contentPanel = new JPanel();
 	private JPanel tablePanel = new JPanel();
-	private JPanel buttonPanel = new JPanel(new GridLayout(4,1,1,5));
+	private JPanel buttonPanel = new JPanel(new GridLayout(5,1,1,5));
 	private JPanel searchPanel = new JPanel();
 	private JPanel customerPanel = new JPanel();
 	private JPanel boatPanel = new JPanel();
@@ -76,6 +77,9 @@ public class MarinaGUI extends JFrame{
 		buttonPanel.add(deleteButton);
 		buttonPanel.add(findButton);
 		buttonPanel.add(editButton);
+		buttonPanel.add(updateButton);
+		
+		updateButton.setVisible(false);
 		
 		contentPanel.setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -102,6 +106,8 @@ public class MarinaGUI extends JFrame{
 		add(contentPanel);
 		
 		findButton.addActionListener(listener);
+		editButton.addActionListener(listener);
+		updateButton.addActionListener(listener);
 		executeSearchButton.addActionListener(listener);
 	}
 	
@@ -129,64 +135,83 @@ public class MarinaGUI extends JFrame{
 				System.out.println("Find Button");
 			}
 			
+			// Search is executed
 			if(event.getSource() == executeSearchButton){
 				int selection = tabbedPane.getSelectedIndex();
 				
 				switch(selection){
 				case 0:
-					System.out.println("1");
 					Customer[] customerResults = db.findCustomers(searchField.getText());
 					for(int i = 0; i < customerResults.length; i++){
 						System.out.println(customerResults[i].toString());
 					}
 					break;
 				case 1:
-					System.out.println("2");
 					Boat[] boatResults = db.findBoats(searchField.getText());
 					for(int i = 0; i < boatResults.length; i++){
 						System.out.println(boatResults[i].toString());
 					}
 					break;
 				case 2:
-					System.out.println("3");
 					Slip[] slipResults = db.findSlips(searchField.getText());
 					for(int i = 0; i < slipResults.length; i++){
 						System.out.println(slipResults[i].toString());
 					}
 					break;
 				case 3:
-					System.out.println("4");
 					Lease[] leaseResults = db.findLeases(searchField.getText());
 					for(int i = 0; i < leaseResults.length; i++){
 						System.out.println(leaseResults[i].toString());
 					}
 				}
-				/*
-				if(selection == 0){
-					Customer[] results = db.findCustomers(searchField.getText());
-					for(int i = 0; i < results.length; i++){
-						System.out.println(results[i].toString());
-					}
+			}
+			
+			// Edit button is pressed
+			if(event.getSource() == editButton){
+				updateButton.setVisible(true);
+				int selection = tabbedPane.getSelectedIndex();
+				// Do JTextField.setEditable(true) for each field
+				switch(selection){
+				case 0:
+					
+					break;
+				case 1:
+					
+					break;
+				case 2:
+					
+					break;
+				case 3:
+					
 				}
-				if(selection == 1){
-					Boat[] results = db.findBoats(searchField.getText());
-					for(int i = 0; i < results.length; i++){
-						System.out.println(results[i].toString());
-					}
+			}
+			
+			// Update button is pressed
+			if(event.getSource() == updateButton){
+				updateButton.setVisible(false);
+				int selection = tabbedPane.getSelectedIndex();
+				// For each tab, create the respective object, populate it, and update the database
+				switch(selection){
+				case 0:
+					Customer cust = new Customer();
+					// Populate object
+					db.updateCustomer(cust);
+					break;
+				case 1:
+					Boat boat = new Boat();
+					// Populate object
+					db.updateBoat(boat);
+					break;
+				case 2:
+					Slip slip = new Slip();
+					// Populate object
+					db.updateSlip(slip);
+					break;
+				case 3:
+					Lease lease = new Lease();
+					// Populate object
+					db.updateLease(lease);
 				}
-				if(selection == 2){
-					Slip[] results = db.findSlips(searchField.getText());
-					for(int i = 0; i < results.length; i++){
-						System.out.println(results[i].toString());
-					}
-				}
-				if(selection == 3){
-					Lease[] results = db.findLeases(searchField.getText());
-					for(int i = 0; i < results.length; i++){
-						System.out.println(results[i].toString());
-					}
-				}
-				*/
 			}
 		}
 	}

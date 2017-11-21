@@ -251,6 +251,22 @@ public class DatabaseManager {
 		}
 	}
 	
+	public void updateCustomer(Customer cust){
+		
+	}
+	
+	public void updateBoat(Boat boat){
+		
+	}
+	
+	public void updateSlip(Slip slip){
+		
+	}
+	
+	public void updateLease(Lease lease){
+		
+	}
+	
 	private int getRowCount(ResultSet rs){
 		int size = 0;
 		try {
