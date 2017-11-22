@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -33,6 +34,70 @@ public class MarinaGUI extends JFrame{
 	
 	ChoiceListener listener = new ChoiceListener();
 	
+	//customerPanel
+	private JLabel fnameLB = new JLabel("First Name", SwingConstants.RIGHT);
+	private JLabel lnameLB = new JLabel("Last Name", SwingConstants.RIGHT);
+	private JLabel paymentLB = new JLabel("Payment Info", SwingConstants.RIGHT);
+	private JLabel phoneLB = new JLabel("Phone Number", SwingConstants.RIGHT);
+	private JLabel streetLB = new JLabel("Street", SwingConstants.RIGHT);
+	private JLabel cityLB = new JLabel("City", SwingConstants.RIGHT);
+	private JLabel stateLB = new JLabel("State", SwingConstants.RIGHT);
+	private JLabel zipcodeLB = new JLabel("Zip Code", SwingConstants.RIGHT);
+		
+	private JTextField fnameTF = new JTextField(25);
+	private JTextField lnameTF = new JTextField(25);
+	private JTextField paymentTF = new JTextField(25);
+	private JTextField phoneTF = new JTextField(25);
+	private JTextField streetTF = new JTextField(25);
+	private JTextField cityTF = new JTextField(25);
+	private JTextField stateTF = new JTextField(25);
+	private JTextField zipcodeTF = new JTextField(25);
+	
+	private JPanel customerLBPanel  = new JPanel();
+	private JPanel customerTFPanel  = new JPanel();
+	
+	//boatPanel
+	private JLabel vinLB = new JLabel("Vin", SwingConstants.RIGHT);
+	private JLabel makeLB = new JLabel("Make", SwingConstants.RIGHT);
+	private JLabel modelLB = new JLabel("Model", SwingConstants.RIGHT);
+	private JLabel colorLB = new JLabel("Color", SwingConstants.RIGHT);
+	private JLabel isPoweredBoatLB = new JLabel("Is Powered Boat", SwingConstants.RIGHT);
+		
+	private JTextField vinTF = new JTextField(25);
+	private JTextField makeTF = new JTextField(25);
+	private JTextField modelTF = new JTextField(25);
+	private JTextField colorTF = new JTextField(25);
+	private JTextField isPoweredBoatTF = new JTextField(25);
+		
+	private JPanel boatLBPanel  = new JPanel();
+	private JPanel boatTFPanel  = new JPanel();
+	
+	//slipPanel
+	private JLabel isPoweredLB = new JLabel("Is Powered?", SwingConstants.RIGHT);
+	private JLabel isLeasedLB = new JLabel("Is Leased?", SwingConstants.RIGHT);
+	private JLabel isOccupiedLB = new JLabel("Is Occupied?", SwingConstants.RIGHT);
+	
+	private JTextField isPoweredTF = new JTextField(25);
+	private JTextField isLeasedTF = new JTextField(25);
+	private JTextField isOccupiedTF = new JTextField(25);
+
+	private JPanel slipLBPanel  = new JPanel();
+	private JPanel slipTFPanel  = new JPanel();
+	
+	//leasePanel
+	private JLabel customerIDLB = new JLabel("Customer ID", SwingConstants.RIGHT);
+	private JLabel slipIDLB = new JLabel("Slip ID", SwingConstants.RIGHT);
+	private JLabel leaseStartDateLB = new JLabel("Lease Start Date", SwingConstants.RIGHT);
+	private JLabel leaseEndDateLB = new JLabel("Lease End Date", SwingConstants.RIGHT);
+	
+	private JTextField customerIDTF = new JTextField(25);
+	private JTextField slipIDTF = new JTextField(25);	
+	private JTextField leaseStartDateTF = new JTextField(25);
+	private JTextField leaseEndDateTF = new JTextField(25);
+
+	private JPanel leaseLBPanel  = new JPanel();
+	private JPanel leaseTFPanel  = new JPanel();
+	
 	private void buildGUI(){
 		outOfLabel.setVerticalAlignment(JLabel.CENTER);
 		outOfLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -49,17 +114,95 @@ public class MarinaGUI extends JFrame{
 		customerPanel.setLayout(new BorderLayout());
 		customerPanel.add(topPanel, BorderLayout.NORTH);
 		
-		tabbedPane.addTab("Customers", customerPanel);
+		customerLBPanel.setLayout(new GridLayout(8,0,1,1));
+		customerLBPanel.add(fnameLB);
+		customerLBPanel.add(lnameLB);
+		customerLBPanel.add(paymentLB);
+		customerLBPanel.add(phoneLB);
+		customerLBPanel.add(streetLB);
+		customerLBPanel.add(cityLB);
+		customerLBPanel.add(stateLB);
+		customerLBPanel.add(zipcodeLB);
 		
+		customerPanel.add(customerLBPanel, BorderLayout.WEST);
+		
+		customerTFPanel.setLayout(new GridLayout(8,0,1,1));
+		customerTFPanel.add(fnameTF);
+		customerTFPanel.add(lnameTF);
+		customerTFPanel.add(paymentTF);
+		customerTFPanel.add(phoneTF);
+		customerTFPanel.add(phoneTF);
+		customerTFPanel.add(streetTF);
+		customerTFPanel.add(cityTF);
+		customerTFPanel.add(stateTF);
+		customerTFPanel.add(zipcodeTF);
+
+		customerPanel.add(customerTFPanel, BorderLayout.CENTER);
+
+		tabbedPane.addTab("Customers", customerPanel);
+				
+		//boatPanel
 		tabbedPane.addTab("Boats", boatPanel);
 		boatPanel.setLayout(new BorderLayout());
 		
+		boatLBPanel.setLayout(new GridLayout(5,0,1,1));
+		boatLBPanel.add(vinLB);
+		boatLBPanel.add(makeLB);
+		boatLBPanel.add(modelLB);
+		boatLBPanel.add(colorLB);
+		boatLBPanel.add(isPoweredBoatLB);
+		
+		boatPanel.add(boatLBPanel, BorderLayout.WEST);
+		
+		boatTFPanel.setLayout(new GridLayout(5,0,1,1));
+		boatTFPanel.add(vinTF);
+		boatTFPanel.add(makeTF);
+		boatTFPanel.add(modelTF);
+		boatTFPanel.add(colorTF);
+		boatTFPanel.add(isPoweredBoatTF);
+		
+		boatPanel.add(boatTFPanel, BorderLayout.CENTER);	
+		
+		//slipPanel
 		tabbedPane.addTab("Slips", slipPanel);
 		slipPanel.setLayout(new BorderLayout());
 		
+		slipLBPanel.setLayout(new GridLayout(3,0,1,1));
+		slipLBPanel.add(isPoweredLB);
+		slipLBPanel.add(isLeasedLB);
+		slipLBPanel.add(isOccupiedLB);
+		
+		slipPanel.add(slipLBPanel, BorderLayout.WEST);
+		
+		slipTFPanel.setLayout(new GridLayout(3,0,1,1));
+		slipTFPanel.add(isPoweredTF);
+		slipTFPanel.add(isLeasedTF);
+		slipTFPanel.add(isOccupiedTF);
+		
+		slipPanel.add(slipTFPanel, BorderLayout.CENTER);	
+		
+		//leasePanel
 		tabbedPane.addTab("Leases", leasePanel);
 		leasePanel.setLayout(new BorderLayout());
 		
+		leaseLBPanel.setLayout(new GridLayout(5,0,1,1));
+		leaseLBPanel.add(customerIDLB);
+		leaseLBPanel.add(vinLB);
+		leaseLBPanel.add(slipIDLB);
+		leaseLBPanel.add(leaseStartDateLB);
+		leaseLBPanel.add(leaseEndDateLB);
+		
+		leasePanel.add(leaseLBPanel, BorderLayout.WEST);
+		
+		leaseTFPanel.setLayout(new GridLayout(5,0,1,1));
+		leaseTFPanel.add(customerIDTF);
+		leaseTFPanel.add(vinTF);
+		leaseTFPanel.add(slipIDTF);
+		leaseTFPanel.add(leaseStartDateTF);
+		leaseTFPanel.add(leaseEndDateTF);
+				
+		leasePanel.add(leaseTFPanel, BorderLayout.CENTER);	
+				
 		tabbedPane.setUI(new BasicTabbedPaneUI() {
 	        private final Insets borderInsets = new Insets(0, 0, 0, 0);
 	        @Override
