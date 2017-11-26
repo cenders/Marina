@@ -287,24 +287,54 @@ public class MarinaGUI extends JFrame{
 					Customer[] customerResults = db.findCustomers(searchField.getText());
 					for(int i = 0; i < customerResults.length; i++){
 						System.out.println(customerResults[i].toString());
+						customerResults[i].setCustomerID(customerResults[i].getCustomerID());
+						fnameTF.setText(customerResults[i].getFirstName());
+						lnameTF.setText(customerResults[i].getLastName());
+						paymentTF.setText(customerResults[i].getPaymentInfo());
+						phoneTF.setText(customerResults[i].getPhoneNumber());
+						streetTF.setText(customerResults[i].getStreetAddress()); 
+						cityTF.setText(customerResults[i].getCity()); 
+						stateTF.setText(customerResults[i].getState());
+						zipcodeTF.setText(customerResults[i].getZip());
+						
 					}
 					break;
 				case 1:
 					Boat[] boatResults = db.findBoats(searchField.getText());
 					for(int i = 0; i < boatResults.length; i++){
 						System.out.println(boatResults[i].toString());
+						
+						vinTF.setText(boatResults[i].getVin());
+						customerIDTF.setText(boatResults[i].getCustomerID());
+						makeTF.setText(boatResults[i].getMake());
+						modelTF.setText(boatResults[i].getModel()); //wrong info when testing
+						colorTF.setText(boatResults[i].getColor()); //wrong info when testing
+						isPoweredBoatTF.setText(boatResults[i].getIsPowered());
+						
 					}
 					break;
 				case 2:
 					Slip[] slipResults = db.findSlips(searchField.getText());
 					for(int i = 0; i < slipResults.length; i++){
 						System.out.println(slipResults[i].toString());
+						
+						/*output is wrong???
+						slipIDTF.setText(slipResults[i].getSlipID());
+						isPoweredTF.setText(slipResults[i].getIsPowered());
+						isLeasedTF.setText(slipResults[i].getIsLeased());
+						isOccupiedTF.setText(slipResults[i].getIsOccupied());
+						*/
+						
 					}
 					break;
 				case 3:
 					Lease[] leaseResults = db.findLeases(searchField.getText());
 					for(int i = 0; i < leaseResults.length; i++){
 						System.out.println(leaseResults[i].toString());
+						
+						
+						
+						
 					}
 				}
 			}

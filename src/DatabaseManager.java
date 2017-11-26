@@ -18,14 +18,14 @@ public class DatabaseManager {
 	PreparedStatement selectBoats = null;
 	PreparedStatement selectSlips = null;
 	PreparedStatement selectLeases = null;
-	
-	
+
+
 	public DatabaseManager(){
 		try{
 			// Establish connection to database
 			connection = DriverManager.getConnection(DATABASE_URL);
 			System.out.println("Database connection established.");
-			
+
 			// Create statement for querying database
 			statement = connection.createStatement();
 			System.out.println("Established statement");
@@ -34,7 +34,7 @@ public class DatabaseManager {
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	public Customer[] findCustomers(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -49,7 +49,7 @@ public class DatabaseManager {
 							+ "city LIKE ? OR "
 							+ "state LIKE ? OR "
 							+ "zip LIKE ?",
-							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+							ResultSet.TYPE_SCROLL_INSENSITIVE,
 						    ResultSet.CONCUR_READ_ONLY);
 			// Set the term values
 			selectCustomers.setString(1, "%" + term + "%");
@@ -62,21 +62,21 @@ public class DatabaseManager {
 			selectCustomers.setString(8, "%" + term + "%");
 			selectCustomers.setString(9, "%" + term + "%");
 			resultSet = selectCustomers.executeQuery();
-			
+
 			// Calculate the number of rows in the ResultSet
 			int rowCount = getRowCount(resultSet);
-			
+
 			// Create array of Customer objects
 			Customer[] results = new Customer[rowCount];
-			
+
 			// Iterate through the ResultSet and create the full Customer object
 			for(int i = 0; i < rowCount; i++){
 				// Get next result
 				resultSet.next();
-				
+
 				// Instantiate new Customer object
 				results[i] = new Customer();
-				
+
 				// Add values to Customer object
 				results[i].setCustomerID(Integer.toString(resultSet.getInt(1)));
 				results[i].setFirstName(resultSet.getString(2));
@@ -96,7 +96,7 @@ public class DatabaseManager {
 			return new Customer[0];
 		}
 	}
-	
+
 	public Boat[] findBoats(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -107,8 +107,8 @@ public class DatabaseManager {
 							+ "make LIKE ? OR "
 							+ "model LIKE ? OR "
 							+ "color LIKE ? OR "
-							+ "is_powered LIKE ?",
-							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+							+ "is_powered_boat LIKE ?",
+							ResultSet.TYPE_SCROLL_INSENSITIVE,
 						    ResultSet.CONCUR_READ_ONLY);
 			// Set the term values
 			selectBoats.setString(1, "%" + term + "%");
@@ -118,22 +118,22 @@ public class DatabaseManager {
 			selectBoats.setString(5, "%" + term + "%");
 			selectBoats.setString(6, "%" + term + "%");
 			resultSet = selectBoats.executeQuery();
-			
+
 			// Calculate the number of rows in the ResultSet
 			int rowCount = getRowCount(resultSet);
-			
+
 			// Create array of Boat objects
 			Boat[] results = new Boat[rowCount];
-			
+
 			// Iterate through the ResultSet and create the full Boat object
 			for(int i = 0; i < rowCount; i++){
 				// Get next result
 				resultSet.next();
-				
+
 				// Instantiate new Boat object
 				results[i] = new Boat();
 				System.out.println(resultSet.getString(3));
-				
+
 				// Add values to Boat object
 				results[i].setVin(resultSet.getString(1));
 				results[i].setCustomerID(resultSet.getString(2));
@@ -150,17 +150,17 @@ public class DatabaseManager {
 			return new Boat[0];
 		}
 	}
-	
+
 	public Slip[] findSlips(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
 			// Example: %tree% will return objects for "trees", "street", and "stree"
 			selectSlips = connection.prepareStatement("SELECT * FROM Slip WHERE "
 							+ "slip_id LIKE ? OR "
-							+ "is_powered_boat LIKE ? OR "
+							+ "is_powered_slip LIKE ? OR "
 							+ "is_leased LIKE ? OR "
 							+ "is_occupied LIKE ?",
-							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+							ResultSet.TYPE_SCROLL_INSENSITIVE,
 						    ResultSet.CONCUR_READ_ONLY);
 			// Set the term values
 			selectSlips.setString(1, "%" + term + "%");
@@ -168,21 +168,21 @@ public class DatabaseManager {
 			selectSlips.setString(3, "%" + term + "%");
 			selectSlips.setString(4, "%" + term + "%");
 			resultSet = selectSlips.executeQuery();
-			
+
 			// Calculate the number of rows in the ResultSet
 			int rowCount = getRowCount(resultSet);
-			
+
 			// Create array of Slip objects
 			Slip[] results = new Slip[rowCount];
-			
+
 			// Iterate through the ResultSet and create the full Slip object
 			for(int i = 0; i < rowCount; i++){
 				// Get next result
 				resultSet.next();
-				
+
 				// Instantiate new Slip object
 				results[i] = new Slip();
-				
+
 				// Add values to Slip object
 				results[i].setSlipID(Integer.toString(1));
 				results[i].setIsPowered(Integer.toString(2));
@@ -197,7 +197,7 @@ public class DatabaseManager {
 			return new Slip[0];
 		}
 	}
-	
+
 	public Lease[] findLeases(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -209,7 +209,7 @@ public class DatabaseManager {
 							+ "slip_id LIKE ? OR "
 							+ "lease_start_date LIKE ? OR "
 							+ "lease_end_date LIKE ?",
-							ResultSet.TYPE_SCROLL_INSENSITIVE, 
+							ResultSet.TYPE_SCROLL_INSENSITIVE,
 						    ResultSet.CONCUR_READ_ONLY);
 			// Set the term values
 			selectLeases.setString(1, "%" + term + "%");
@@ -219,21 +219,21 @@ public class DatabaseManager {
 			selectLeases.setString(5, "%" + term + "%");
 			selectLeases.setString(6, "%" + term + "%");
 			resultSet = selectLeases.executeQuery();
-			
+
 			// Calculate the number of rows in the ResultSet
 			int rowCount = getRowCount(resultSet);
-			
+
 			// Create array of Lease objects
 			Lease[] results = new Lease[rowCount];
-			
+
 			// Iterate through the ResultSet and create the full Lease object
 			for(int i = 0; i < rowCount; i++){
 				// Get next result
 				resultSet.next();
-				
+
 				// Instantiate new Lease object
 				results[i] = new Lease();
-				
+
 				// Add values to Lease object
 				results[i].setLeaseID(Integer.toString(resultSet.getInt(1)));
 				results[i].setCustomerID(Integer.toString(resultSet.getInt(2)));
@@ -250,30 +250,30 @@ public class DatabaseManager {
 			return new Lease[0];
 		}
 	}
-	
+
 	public void updateCustomer(Customer cust){
-		
+
 	}
-	
+
 	public void updateBoat(Boat boat){
-		
+
 	}
-	
+
 	public void updateSlip(Slip slip){
-		
+
 	}
-	
+
 	public void updateLease(Lease lease){
-		
+
 	}
-	
+
 	private int getRowCount(ResultSet rs){
 		int size = 0;
 		try {
 			rs.last();
 			size = resultSet.getRow();
 			rs.beforeFirst();
-		} 
+		}
 		catch (SQLException sqlex) {
 			sqlex.printStackTrace();
 			return 0;
