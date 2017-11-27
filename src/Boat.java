@@ -20,6 +20,13 @@ public class Boat {
 		setIsPowered("");
 	}
 	
+	public void setAllBoatInfo(String make, String model, String color, String isPowered){
+		this.make = make;
+		this.model = model;
+		this.color = color;
+		this.isPowered = isPowered;
+	}
+	
 	/**
 	 * @return the vin
 	 */

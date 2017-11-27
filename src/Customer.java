@@ -26,7 +26,28 @@ public class Customer {
 		setState("");
 		setZip("");
 	}
-
+	
+	/**
+	 * 
+	 * @param firstName the firstName to set
+	 * @param lastName the lastName to set	
+	 * @param paymentInfo the paymentInfo to set
+	 * @param phoneNumber the phoneNumber to set
+	 * @param streetAddress the streetAddress to set
+	 * @param city the city to set
+	 * @param state the state to set
+	 * @param zip the zip to set
+	 */
+	public void setAllCustomerInfo(String firstName, String lastName,String paymentInfo, String phoneNumber, String streetAddress, String city, String state, String zip){
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.paymentInfo = paymentInfo;
+		this.phoneNumber = phoneNumber;
+		this.streetAddress = streetAddress;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+	}
 	/**
 	 * @return the customerID
 	 */

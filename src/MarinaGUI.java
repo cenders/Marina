@@ -131,7 +131,6 @@ public class MarinaGUI extends JFrame{
 		customerTFPanel.add(lnameTF);
 		customerTFPanel.add(paymentTF);
 		customerTFPanel.add(phoneTF);
-		customerTFPanel.add(phoneTF);
 		customerTFPanel.add(streetTF);
 		customerTFPanel.add(cityTF);
 		customerTFPanel.add(stateTF);
@@ -145,8 +144,9 @@ public class MarinaGUI extends JFrame{
 		tabbedPane.addTab("Boats", boatPanel);
 		boatPanel.setLayout(new BorderLayout());
 		
-		boatLBPanel.setLayout(new GridLayout(5,0,1,1));
-		boatLBPanel.add(vinLB);
+		boatLBPanel.setLayout(new GridLayout(4,0,1,1));	
+		//boatLBPanel.add(vinLB); //already exists in another panel, so doesn't show on this panel, same as TF below
+		//boatLBPanel.add(customerIDLB); //same as above
 		boatLBPanel.add(makeLB);
 		boatLBPanel.add(modelLB);
 		boatLBPanel.add(colorLB);
@@ -154,8 +154,9 @@ public class MarinaGUI extends JFrame{
 		
 		boatPanel.add(boatLBPanel, BorderLayout.WEST);
 		
-		boatTFPanel.setLayout(new GridLayout(5,0,1,1));
-		boatTFPanel.add(vinTF);
+		boatTFPanel.setLayout(new GridLayout(4,0,1,1));
+		//boatTFPanel.add(vinTF);
+		//boatTFPanel.add(customerIDTF);
 		boatTFPanel.add(makeTF);
 		boatTFPanel.add(modelTF);
 		boatTFPanel.add(colorTF);
@@ -163,6 +164,7 @@ public class MarinaGUI extends JFrame{
 		
 		boatPanel.add(boatTFPanel, BorderLayout.CENTER);	
 		
+				
 		//slipPanel
 		tabbedPane.addTab("Slips", slipPanel);
 		slipPanel.setLayout(new BorderLayout());
@@ -248,6 +250,7 @@ public class MarinaGUI extends JFrame{
 		contentPanel.add(buttonPanel, constraints);
 		add(contentPanel);
 		
+		createButton.addActionListener(listener);
 		findButton.addActionListener(listener);
 		editButton.addActionListener(listener);
 		updateButton.addActionListener(listener);
@@ -267,6 +270,41 @@ public class MarinaGUI extends JFrame{
 	class ChoiceListener implements ActionListener{
 		DatabaseManager db = new DatabaseManager();
 		public void actionPerformed(ActionEvent event){
+			
+		// Create button is pressed
+			if(event.getSource() == createButton){
+				int selection = tabbedPane.getSelectedIndex();
+				// For each tab, create the respective object, populate it, and update the database
+				switch(selection){
+				case 0:
+					Customer cust = new Customer();
+					cust.setAllCustomerInfo(fnameTF.getText(), lnameTF.getText(), paymentTF.getText(), phoneTF.getText(), streetTF.getText(), cityTF.getText(),stateTF.getText(),zipcodeTF.getText());;
+					// Populate object
+					db.addCustomer(cust.getFirstName(),cust.getLastName(), cust.getPaymentInfo(), cust.getPhoneNumber(),cust.getStreetAddress(),cust.getCity(), cust.getState(), cust.getZip());
+					break;
+					
+				case 1:
+					Boat boat = new Boat();
+					boat.setAllBoatInfo(makeTF.getText(),modelTF.getText(),colorTF.getText(),isPoweredTF.getText());
+					boolean isPowered;
+					if((isPoweredTF.getText()).equals("YES|Yes|yes"))
+					{isPowered = true;}
+					else
+					{isPowered = false;}
+					db.addBoat(boat.getMake(), boat.getModel(), boat.getColor(), isPowered);
+					break;
+							case 2:
+								Slip slip = new Slip();
+								
+								break;
+							case 3:
+								Lease lease = new Lease();
+								
+							}
+						}
+			
+			
+			
 			if(event.getSource() == findButton){
 				searchDialog.setTitle("Search");
 				searchDialog.setLayout(new BorderLayout());
@@ -318,12 +356,12 @@ public class MarinaGUI extends JFrame{
 					for(int i = 0; i < slipResults.length; i++){
 						System.out.println(slipResults[i].toString());
 						
-						/*output is wrong???
+						//output is wrong???
 						slipIDTF.setText(slipResults[i].getSlipID());
 						isPoweredTF.setText(slipResults[i].getIsPowered());
 						isLeasedTF.setText(slipResults[i].getIsLeased());
 						isOccupiedTF.setText(slipResults[i].getIsOccupied());
-						*/
+						
 						
 					}
 					break;
