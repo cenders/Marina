@@ -22,6 +22,8 @@ public class DatabaseManager {
 	PreparedStatement insertNewCustomer = null;
 	PreparedStatement insertNewBoat = null;
 	
+	long customer_id;
+	
 	
 	public DatabaseManager(){
 		try{
@@ -55,11 +57,23 @@ public class DatabaseManager {
 			insertNewCustomer.setString(6,city);
 			insertNewCustomer.setString(7,state);
 			insertNewCustomer.setString(8,zip);
-			
-			System.out.println("result of insertNewCustomer.executeUpdate() is: "+ insertNewCustomer.executeUpdate());
-			
+						
 			result = insertNewCustomer.executeUpdate();
-			System.out.println(result); 
+			
+			//get newly inserted record id
+	        if (result == 0) {
+	            throw new SQLException("Creating new customer failed, no rows affected.");
+	        }
+	        try (ResultSet generatedKeys = insertNewCustomer.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	               customer_id = generatedKeys.getLong(1); ///////////////////////////////////////
+	               System.out.println(customer_id);
+	            }
+	            else {
+	                throw new SQLException("Creating user failed, no ID obtained.");
+	            }
+	        }
+
 		}
 		catch (SQLException sqlex)
 		{
@@ -76,13 +90,14 @@ public class DatabaseManager {
 		
 		try
 		{
-			insertNewBoat = connection.prepareStatement("INSERT INTO BOAT (make, model, color, is_powered_boat)" 
-															+ "VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); 
+			insertNewBoat = connection.prepareStatement("INSERT INTO BOAT (customer_id, make, model, color, is_powered_boat)" 
+															+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); 
 		
-			insertNewBoat.setString(1,make);
-			insertNewBoat.setString(2,model);
-			insertNewBoat.setString(3,color);
-			insertNewBoat.setBoolean(4,isPowered);
+			insertNewBoat.setLong(1,customer_id);
+			insertNewBoat.setString(2,make);
+			insertNewBoat.setString(3,model);
+			insertNewBoat.setString(4,color);
+			insertNewBoat.setBoolean(5,isPowered);
 						
 			result = insertNewBoat.executeUpdate();
 			System.out.println(result); 
@@ -344,4 +359,7 @@ public class DatabaseManager {
 		}
 		return size;
 	}
+	
+	public long GetCustomerID()
+	{ return customer_id;}
 }

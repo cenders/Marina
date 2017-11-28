@@ -57,13 +57,13 @@ public class MarinaGUI extends JFrame{
 	private JPanel customerTFPanel  = new JPanel();
 	
 	//boatPanel
-	private JLabel vinLB = new JLabel("Vin", SwingConstants.RIGHT);
+	private JLabel customerIDLB = new JLabel("Customer ID", SwingConstants.RIGHT);
 	private JLabel makeLB = new JLabel("Make", SwingConstants.RIGHT);
 	private JLabel modelLB = new JLabel("Model", SwingConstants.RIGHT);
 	private JLabel colorLB = new JLabel("Color", SwingConstants.RIGHT);
 	private JLabel isPoweredBoatLB = new JLabel("Is Powered Boat", SwingConstants.RIGHT);
-		
-	private JTextField vinTF = new JTextField(25);
+	
+	private JTextField customerIDTF = new JTextField(25);
 	private JTextField makeTF = new JTextField(25);
 	private JTextField modelTF = new JTextField(25);
 	private JTextField colorTF = new JTextField(25);
@@ -72,11 +72,17 @@ public class MarinaGUI extends JFrame{
 	private JPanel boatLBPanel  = new JPanel();
 	private JPanel boatTFPanel  = new JPanel();
 	
+	private ButtonGroup optionGroup = new ButtonGroup();
+	private JRadioButton isPoweredOption[] = new JRadioButton[2];
+	private String isPoweredOptionLabels[] = {"Yes", "No"};
+	
 	//slipPanel
+	private JLabel vinLB = new JLabel("Vin", SwingConstants.RIGHT);
 	private JLabel isPoweredLB = new JLabel("Is Powered?", SwingConstants.RIGHT);
 	private JLabel isLeasedLB = new JLabel("Is Leased?", SwingConstants.RIGHT);
 	private JLabel isOccupiedLB = new JLabel("Is Occupied?", SwingConstants.RIGHT);
 	
+	private JTextField vinTF = new JTextField(25);
 	private JTextField isPoweredTF = new JTextField(25);
 	private JTextField isLeasedTF = new JTextField(25);
 	private JTextField isOccupiedTF = new JTextField(25);
@@ -85,18 +91,17 @@ public class MarinaGUI extends JFrame{
 	private JPanel slipTFPanel  = new JPanel();
 	
 	//leasePanel
-	private JLabel customerIDLB = new JLabel("Customer ID", SwingConstants.RIGHT);
 	private JLabel slipIDLB = new JLabel("Slip ID", SwingConstants.RIGHT);
 	private JLabel leaseStartDateLB = new JLabel("Lease Start Date", SwingConstants.RIGHT);
 	private JLabel leaseEndDateLB = new JLabel("Lease End Date", SwingConstants.RIGHT);
 	
-	private JTextField customerIDTF = new JTextField(25);
 	private JTextField slipIDTF = new JTextField(25);	
 	private JTextField leaseStartDateTF = new JTextField(25);
 	private JTextField leaseEndDateTF = new JTextField(25);
 
 	private JPanel leaseLBPanel  = new JPanel();
 	private JPanel leaseTFPanel  = new JPanel();
+	
 	
 	private void buildGUI(){
 		outOfLabel.setVerticalAlignment(JLabel.CENTER);
@@ -144,9 +149,8 @@ public class MarinaGUI extends JFrame{
 		tabbedPane.addTab("Boats", boatPanel);
 		boatPanel.setLayout(new BorderLayout());
 		
-		boatLBPanel.setLayout(new GridLayout(4,0,1,1));	
-		//boatLBPanel.add(vinLB); //already exists in another panel, so doesn't show on this panel, same as TF below
-		//boatLBPanel.add(customerIDLB); //same as above
+		boatLBPanel.setLayout(new GridLayout(5,0,1,1));	
+		boatLBPanel.add(customerIDLB); 
 		boatLBPanel.add(makeLB);
 		boatLBPanel.add(modelLB);
 		boatLBPanel.add(colorLB);
@@ -154,13 +158,23 @@ public class MarinaGUI extends JFrame{
 		
 		boatPanel.add(boatLBPanel, BorderLayout.WEST);
 		
-		boatTFPanel.setLayout(new GridLayout(4,0,1,1));
+		boatTFPanel.setLayout(new GridLayout(5,0,1,1));
 		//boatTFPanel.add(vinTF);
-		//boatTFPanel.add(customerIDTF);
+		boatTFPanel.add(customerIDTF);
 		boatTFPanel.add(makeTF);
 		boatTFPanel.add(modelTF);
 		boatTFPanel.add(colorTF);
-		boatTFPanel.add(isPoweredBoatTF);
+		//boatTFPanel.add(isPoweredBoatTF);
+		
+		for(int i=0; i<isPoweredOption.length; i++)
+		{
+			isPoweredOption[i] = new JRadioButton(isPoweredOptionLabels[i]);
+			isPoweredOption[i].addActionListener(listener);
+			boatTFPanel.add(isPoweredOption[i]);
+		
+		}
+	
+		isPoweredOption[1].setSelected(true);
 		
 		boatPanel.add(boatTFPanel, BorderLayout.CENTER);	
 		
@@ -169,14 +183,16 @@ public class MarinaGUI extends JFrame{
 		tabbedPane.addTab("Slips", slipPanel);
 		slipPanel.setLayout(new BorderLayout());
 		
-		slipLBPanel.setLayout(new GridLayout(3,0,1,1));
+		slipLBPanel.setLayout(new GridLayout(4,0,1,1));
+		slipLBPanel.add(vinLB);
 		slipLBPanel.add(isPoweredLB);
 		slipLBPanel.add(isLeasedLB);
 		slipLBPanel.add(isOccupiedLB);
 		
 		slipPanel.add(slipLBPanel, BorderLayout.WEST);
 		
-		slipTFPanel.setLayout(new GridLayout(3,0,1,1));
+		slipTFPanel.setLayout(new GridLayout(4,0,1,1));
+		slipTFPanel.add(vinTF);
 		slipTFPanel.add(isPoweredTF);
 		slipTFPanel.add(isLeasedTF);
 		slipTFPanel.add(isOccupiedTF);
@@ -187,18 +203,14 @@ public class MarinaGUI extends JFrame{
 		tabbedPane.addTab("Leases", leasePanel);
 		leasePanel.setLayout(new BorderLayout());
 		
-		leaseLBPanel.setLayout(new GridLayout(5,0,1,1));
-		leaseLBPanel.add(customerIDLB);
-		leaseLBPanel.add(vinLB);
+		leaseLBPanel.setLayout(new GridLayout(3,0,1,1));
 		leaseLBPanel.add(slipIDLB);
 		leaseLBPanel.add(leaseStartDateLB);
 		leaseLBPanel.add(leaseEndDateLB);
 		
 		leasePanel.add(leaseLBPanel, BorderLayout.WEST);
 		
-		leaseTFPanel.setLayout(new GridLayout(5,0,1,1));
-		leaseTFPanel.add(customerIDTF);
-		leaseTFPanel.add(vinTF);
+		leaseTFPanel.setLayout(new GridLayout(3,0,1,1));
 		leaseTFPanel.add(slipIDTF);
 		leaseTFPanel.add(leaseStartDateTF);
 		leaseTFPanel.add(leaseEndDateTF);
@@ -274,6 +286,10 @@ public class MarinaGUI extends JFrame{
 		// Create button is pressed
 			if(event.getSource() == createButton){
 				int selection = tabbedPane.getSelectedIndex();
+				//Customer cust = new Customer();
+				Boat boat = new Boat();
+				Slip slip = new Slip();
+				Lease lease = new Lease();
 				// For each tab, create the respective object, populate it, and update the database
 				switch(selection){
 				case 0:
@@ -281,24 +297,28 @@ public class MarinaGUI extends JFrame{
 					cust.setAllCustomerInfo(fnameTF.getText(), lnameTF.getText(), paymentTF.getText(), phoneTF.getText(), streetTF.getText(), cityTF.getText(),stateTF.getText(),zipcodeTF.getText());;
 					// Populate object
 					db.addCustomer(cust.getFirstName(),cust.getLastName(), cust.getPaymentInfo(), cust.getPhoneNumber(),cust.getStreetAddress(),cust.getCity(), cust.getState(), cust.getZip());
+					customerIDTF.setText(String.valueOf(db.GetCustomerID()));;
 					break;
 					
 				case 1:
-					Boat boat = new Boat();
+					//Boat boat = new Boat();
 					boat.setAllBoatInfo(makeTF.getText(),modelTF.getText(),colorTF.getText(),isPoweredTF.getText());
-					boolean isPowered;
-					if((isPoweredTF.getText()).equals("YES|Yes|yes"))
-					{isPowered = true;}
-					else
-					{isPowered = false;}
-					db.addBoat(boat.getMake(), boat.getModel(), boat.getColor(), isPowered);
+					//boolean isPowered;
+//					if(isPoweredTF.getText().trim().equalsIgnoreCase("YES"))
+//					{isPowered = true;}
+//					else
+//					{isPowered = false;}
+//					db.addBoat(boat.getMake(), boat.getModel(), boat.getColor(), isPowered);
+					System.out.println(isPoweredTF.getText()); //gets empty string here no matter what the input is
+					System.out.println(makeTF.getText());
+					
 					break;
 							case 2:
-								Slip slip = new Slip();
+								//Slip slip = new Slip();
 								
 								break;
 							case 3:
-								Lease lease = new Lease();
+								//Lease lease = new Lease();
 								
 							}
 						}
@@ -343,7 +363,7 @@ public class MarinaGUI extends JFrame{
 						System.out.println(boatResults[i].toString());
 						
 						vinTF.setText(boatResults[i].getVin());
-						customerIDTF.setText(boatResults[i].getCustomerID());
+						//customerIDTF.setText(boatResults[i].getCustomerID());
 						makeTF.setText(boatResults[i].getMake());
 						modelTF.setText(boatResults[i].getModel()); //wrong info when testing
 						colorTF.setText(boatResults[i].getColor()); //wrong info when testing
