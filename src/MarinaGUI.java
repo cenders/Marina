@@ -72,10 +72,6 @@ public class MarinaGUI extends JFrame{
 	private JPanel boatLBPanel  = new JPanel();
 	private JPanel boatTFPanel  = new JPanel();
 	
-	private ButtonGroup optionGroup = new ButtonGroup();
-	private JRadioButton isPoweredOption[] = new JRadioButton[2];
-	private String isPoweredOptionLabels[] = {"Yes", "No"};
-	
 	//slipPanel
 	private JLabel vinLB = new JLabel("Vin", SwingConstants.RIGHT);
 	private JLabel isPoweredLB = new JLabel("Is Powered?", SwingConstants.RIGHT);
@@ -83,7 +79,7 @@ public class MarinaGUI extends JFrame{
 	private JLabel isOccupiedLB = new JLabel("Is Occupied?", SwingConstants.RIGHT);
 	
 	private JTextField vinTF = new JTextField(25);
-	private JTextField isPoweredTF = new JTextField(25);
+	private JTextField isPoweredSlipTF = new JTextField(25);
 	private JTextField isLeasedTF = new JTextField(25);
 	private JTextField isOccupiedTF = new JTextField(25);
 
@@ -165,16 +161,10 @@ public class MarinaGUI extends JFrame{
 		boatTFPanel.add(modelTF);
 		boatTFPanel.add(colorTF);
 		//boatTFPanel.add(isPoweredBoatTF);
+		boatTFPanel.add(isPoweredBoatTF); //in slip panel!!
 		
-		for(int i=0; i<isPoweredOption.length; i++)
-		{
-			isPoweredOption[i] = new JRadioButton(isPoweredOptionLabels[i]);
-			isPoweredOption[i].addActionListener(listener);
-			boatTFPanel.add(isPoweredOption[i]);
-		
-		}
+				
 	
-		isPoweredOption[1].setSelected(true);
 		
 		boatPanel.add(boatTFPanel, BorderLayout.CENTER);	
 		
@@ -193,7 +183,7 @@ public class MarinaGUI extends JFrame{
 		
 		slipTFPanel.setLayout(new GridLayout(4,0,1,1));
 		slipTFPanel.add(vinTF);
-		slipTFPanel.add(isPoweredTF);
+		slipTFPanel.add(isPoweredSlipTF);
 		slipTFPanel.add(isLeasedTF);
 		slipTFPanel.add(isOccupiedTF);
 		
@@ -269,6 +259,7 @@ public class MarinaGUI extends JFrame{
 		executeSearchButton.addActionListener(listener);
 	}
 	
+
 	
 	public MarinaGUI(){
 		super("Marina");
@@ -302,26 +293,26 @@ public class MarinaGUI extends JFrame{
 					
 				case 1:
 					//Boat boat = new Boat();
-					boat.setAllBoatInfo(makeTF.getText(),modelTF.getText(),colorTF.getText(),isPoweredTF.getText());
-					//boolean isPowered;
-//					if(isPoweredTF.getText().trim().equalsIgnoreCase("YES"))
-//					{isPowered = true;}
-//					else
-//					{isPowered = false;}
-//					db.addBoat(boat.getMake(), boat.getModel(), boat.getColor(), isPowered);
-					System.out.println(isPoweredTF.getText()); //gets empty string here no matter what the input is
-					System.out.println(makeTF.getText());
-					
+					boat.setAllBoatInfo(makeTF.getText(),modelTF.getText(),colorTF.getText(),isPoweredBoatTF.getText());
+					boolean isPoweredBoatOrNot;
+					if(isPoweredBoatTF.getText().trim().equalsIgnoreCase("yes"))
+					{isPoweredBoatOrNot = true;}
+					else
+					{isPoweredBoatOrNot = false;}
+					db.addBoat(boat.getMake(), boat.getModel(), boat.getColor(), isPoweredBoatOrNot);
+					System.out.println(isPoweredBoatOrNot); //gets empty string here no matter what the input is
 					break;
-							case 2:
-								//Slip slip = new Slip();
+					
+				case 2:
+					//Slip slip = new Slip();
 								
-								break;
-							case 3:
+					break;
+					
+				case 3:
 								//Lease lease = new Lease();
 								
-							}
-						}
+				}
+			}
 			
 			
 			
@@ -378,7 +369,7 @@ public class MarinaGUI extends JFrame{
 						
 						//output is wrong???
 						slipIDTF.setText(slipResults[i].getSlipID());
-						isPoweredTF.setText(slipResults[i].getIsPowered());
+						isPoweredSlipTF.setText(slipResults[i].getIsPowered());
 						isLeasedTF.setText(slipResults[i].getIsLeased());
 						isOccupiedTF.setText(slipResults[i].getIsOccupied());
 						
