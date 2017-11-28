@@ -74,7 +74,7 @@ public class MarinaGUI extends JFrame{
 	
 	//slipPanel
 	private JLabel vinLB = new JLabel("Vin", SwingConstants.RIGHT);
-	private JLabel isPoweredLB = new JLabel("Is Powered?", SwingConstants.RIGHT);
+	private JLabel isPoweredLB = new JLabel("Is Powered Slip?", SwingConstants.RIGHT);
 	private JLabel isLeasedLB = new JLabel("Is Leased?", SwingConstants.RIGHT);
 	private JLabel isOccupiedLB = new JLabel("Is Occupied?", SwingConstants.RIGHT);
 	
@@ -173,16 +173,16 @@ public class MarinaGUI extends JFrame{
 		tabbedPane.addTab("Slips", slipPanel);
 		slipPanel.setLayout(new BorderLayout());
 		
-		slipLBPanel.setLayout(new GridLayout(4,0,1,1));
-		slipLBPanel.add(vinLB);
+		slipLBPanel.setLayout(new GridLayout(3,0,1,1));
+		//slipLBPanel.add(vinLB);
 		slipLBPanel.add(isPoweredLB);
 		slipLBPanel.add(isLeasedLB);
 		slipLBPanel.add(isOccupiedLB);
 		
 		slipPanel.add(slipLBPanel, BorderLayout.WEST);
 		
-		slipTFPanel.setLayout(new GridLayout(4,0,1,1));
-		slipTFPanel.add(vinTF);
+		slipTFPanel.setLayout(new GridLayout(3,0,1,1));
+		//slipTFPanel.add(vinTF);
 		slipTFPanel.add(isPoweredSlipTF);
 		slipTFPanel.add(isLeasedTF);
 		slipTFPanel.add(isOccupiedTF);
@@ -193,14 +193,16 @@ public class MarinaGUI extends JFrame{
 		tabbedPane.addTab("Leases", leasePanel);
 		leasePanel.setLayout(new BorderLayout());
 		
-		leaseLBPanel.setLayout(new GridLayout(3,0,1,1));
+		leaseLBPanel.setLayout(new GridLayout(4,0,1,1));
+		leaseLBPanel.add(vinLB);
 		leaseLBPanel.add(slipIDLB);
 		leaseLBPanel.add(leaseStartDateLB);
 		leaseLBPanel.add(leaseEndDateLB);
 		
 		leasePanel.add(leaseLBPanel, BorderLayout.WEST);
 		
-		leaseTFPanel.setLayout(new GridLayout(3,0,1,1));
+		leaseTFPanel.setLayout(new GridLayout(4,0,1,1));
+		leaseTFPanel.add(vinTF);
 		leaseTFPanel.add(slipIDTF);
 		leaseTFPanel.add(leaseStartDateTF);
 		leaseTFPanel.add(leaseEndDateTF);
@@ -300,7 +302,7 @@ public class MarinaGUI extends JFrame{
 					else
 					{isPoweredBoatOrNot = false;}
 					db.addBoat(boat.getMake(), boat.getModel(), boat.getColor(), isPoweredBoatOrNot);
-					System.out.println(isPoweredBoatOrNot); //gets empty string here no matter what the input is
+					vinTF.setText(String.valueOf(db.GetBoatVin()));;
 					break;
 					
 				case 2:

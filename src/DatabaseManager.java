@@ -23,6 +23,7 @@ public class DatabaseManager {
 	PreparedStatement insertNewBoat = null;
 	
 	long customer_id;
+	long boat_vin;
 	
 	
 	public DatabaseManager(){
@@ -101,7 +102,24 @@ public class DatabaseManager {
 						
 			result = insertNewBoat.executeUpdate();
 			System.out.println(result); 
+			
+			//get newly inserted record id
+	        if (result == 0) {
+	            throw new SQLException("Creating new boat failed, no rows affected.");
+	        }
+	        try (ResultSet generatedKeys = insertNewBoat.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	               boat_vin = generatedKeys.getLong(1); ///////////////////////////////////////
+	               System.out.println(boat_vin);
+	            }
+	            else {
+	                throw new SQLException("Creating user failed, no ID obtained.");
+	            }
+	        }
+
 		}
+		
+		
 		catch (SQLException sqlex)
 		{
 			JOptionPane.showMessageDialog(null,sqlex.getMessage(),"Database Insert Failed",JOptionPane.ERROR_MESSAGE);
@@ -362,4 +380,7 @@ public class DatabaseManager {
 	
 	public long GetCustomerID()
 	{ return customer_id;}
+	
+	public long GetBoatVin()
+	{ return boat_vin;}
 }
