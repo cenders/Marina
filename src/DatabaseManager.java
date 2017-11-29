@@ -185,7 +185,7 @@ public class DatabaseManager {
 		 }
 	 
 	//add new lease
-		 public int addLease(Date leaseStartDate, Date leaseEndDate)
+		 public int addLease(Long customer_id, Long vin, Long slip_id, Date leaseStartDate, Date leaseEndDate)
 			 {
 			 	int result = 0;
 			
@@ -196,7 +196,7 @@ public class DatabaseManager {
 			
 			 		
 			 		insertNewLease.setLong(1,customer_id);
-			 		insertNewLease.setLong(2,boat_vin);
+			 		insertNewLease.setLong(2,vin);
 			 		insertNewLease.setLong(3,slip_id);
 			 		insertNewLease.setDate(4, leaseStartDate);
 			 		insertNewLease.setDate(5,leaseEndDate);
@@ -208,7 +208,7 @@ public class DatabaseManager {
 			 				if (result == 0) {
 			 						throw new SQLException("Creating new lease failed, no rows affected.");
 			 				}
-			 				try (ResultSet generatedKeys = insertNewSlip.getGeneratedKeys()) {
+			 				try (ResultSet generatedKeys = insertNewLease.getGeneratedKeys()) {
 			 						if (generatedKeys.next()) {
 			 							 lease_id = generatedKeys.getLong(1); 
 			 							 System.out.println("Lease ID is " + lease_id);

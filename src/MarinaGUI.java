@@ -302,12 +302,12 @@ public class MarinaGUI extends JFrame{
 					
 				case 1:
 					//Boat boat = new Boat();
-					//boat.setAllBoatInfo(makeTF.getText(),modelTF.getText(),colorTF.getText(),isPoweredBoatTF.getText());
+					boat.setAllBoatInfo(makeTF.getText(),modelTF.getText(),colorTF.getText(),isPoweredBoatTF.getText());
 					boat.setCustomerID(customerIDTF.getText());
-					boat.setMake(makeTF.getText());
-					boat.setModel(modelTF.getText());
-					boat.setColor(modelTF.getText());
-					boat.setIsPowered(isPoweredBoatTF.getText());
+//					boat.setMake(makeTF.getText());
+//					boat.setModel(modelTF.getText());
+//					boat.setColor(modelTF.getText());
+//					boat.setIsPowered(isPoweredBoatTF.getText());
 					boolean isPoweredBoatOrNot;					
 					
 					String temp = isPoweredBoatTF.getText().trim();
@@ -402,6 +402,12 @@ public class MarinaGUI extends JFrame{
 				case 3:
 					//Lease lease = new Lease();
 					 lease.setAllLeaseInfo(leaseStartDateTF.getText(),leaseEndDateTF.getText());
+					 lease.setCustomerID(customerIDTF.getText());
+					 lease.setVin(vinTF.getText());
+					 lease.setSlipID(slipIDTF.getText());
+//					 lease.setLeaseStartDate(leaseStartDateTF.getText());
+//					 lease.setLeaseEndDate(leaseEndDateTF.getText());
+					 
 					 String lsd = leaseStartDateTF.getText(),
 							led = leaseEndDateTF.getText();
 						
@@ -416,8 +422,8 @@ public class MarinaGUI extends JFrame{
 				        java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
 				        java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 				        
-				        db.addLease(sqlStartDate,sqlEndDate);
-								
+				        
+				        db.addLease(Long.valueOf(lease.getCustomerID()), Long.valueOf(lease.getVin()), Long.valueOf(lease.getSlipID()), sqlStartDate, sqlEndDate);								
 				}
 			}
 			
