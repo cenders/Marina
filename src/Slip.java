@@ -10,6 +10,14 @@ public class Slip {
 		setIsLeased("");
 		setIsOccupied("");
 	}
+	
+	public void setAllSlipInfo(String isPowered, String isLeased, String isOccupied){
+	 	this.isPowered = isPowered;
+	 	this.isLeased = isLeased;
+	 	this.isOccupied = isOccupied;
+	 }
+	
+	
 	/**
 	 * @return the slipID
 	 */

@@ -4,9 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.sql.Date;
 
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 public class DatabaseManager {
 	static final String DATABASE_URL = "jdbc:ucanaccess:///Users/bai/Documents/workspace/NewMarina/src/Database/Marina.accdb";
@@ -21,10 +21,16 @@ public class DatabaseManager {
 	
 	PreparedStatement insertNewCustomer = null;
 	PreparedStatement insertNewBoat = null;
+	PreparedStatement insertNewSlip = null;
+	PreparedStatement insertNewLease = null;
+	
+	PreparedStatement deleteCustomer = null;
+
 	
 	long customer_id;
 	long boat_vin;
-	
+	long slip_id;
+	long lease_id;
 	
 	public DatabaseManager(){
 		try{
@@ -85,21 +91,26 @@ public class DatabaseManager {
 		return result;
 	}
 	
-	public int addBoat(String make, String model, String color, boolean isPowered)
+	public int addBoat(long customer_id, String make, String model, String color, boolean isPowered)
 	{
 		int result = 0;
 		
 		try
 		{
-			insertNewBoat = connection.prepareStatement("INSERT INTO BOAT (customer_id, make, model, color, is_powered_boat)" 
-															+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); 
+			insertNewBoat = connection.prepareStatement 
+					//("UPDATE Boat SET make = ? WHERE customer_id = ?");
+					//("UPDATE Employee SET FirstName = '" + fname + "' WHERE EmployeeID = ' " + employeeID + "'");	
+					//("UPDATE Boat SET make = ?, model = ?, color = ?, is_powered_boat = ? WHERE customer_id = ?");
+					("INSERT INTO BOAT (customer_id, make, model, color, is_powered_boat)"  
+														+ " VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); 
 		
+			
 			insertNewBoat.setLong(1,customer_id);
 			insertNewBoat.setString(2,make);
 			insertNewBoat.setString(3,model);
 			insertNewBoat.setString(4,color);
-			insertNewBoat.setBoolean(5,isPowered);
-						
+			insertNewBoat.setBoolean(5,isPowered);		
+					
 			result = insertNewBoat.executeUpdate();
 			System.out.println(result); 
 			
@@ -109,7 +120,7 @@ public class DatabaseManager {
 	        }
 	        try (ResultSet generatedKeys = insertNewBoat.getGeneratedKeys()) {
 	            if (generatedKeys.next()) {
-	               boat_vin = generatedKeys.getLong(1); ///////////////////////////////////////
+	               boat_vin = generatedKeys.getLong(1); 
 	               System.out.println(boat_vin);
 	            }
 	            else {
@@ -128,6 +139,96 @@ public class DatabaseManager {
 		
 		return result;
 	}
+	
+	
+	//add new slip
+	 public int addSlip(boolean isPoweredSlip, boolean isLeased, boolean isOccupied)
+		 {
+		 	int result = 0;
+		
+		 	try
+		 	{
+		 		insertNewSlip = connection.prepareStatement("INSERT INTO SLIP (is_powered_slip, is_leased, is_occupied)"
+		 														+ "VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+		
+		 		insertNewSlip.setBoolean(1,isPoweredSlip);
+		 		insertNewSlip.setBoolean(2,isLeased);
+		 		insertNewSlip.setBoolean(3,isOccupied);
+		
+		 		result = insertNewSlip.executeUpdate();
+		 		System.out.println(result);
+		
+		 		//get newly inserted record id
+		 				if (result == 0) {
+		 						throw new SQLException("Creating new slip failed, no rows affected.");
+		 				}
+		 				try (ResultSet generatedKeys = insertNewSlip.getGeneratedKeys()) {
+		 						if (generatedKeys.next()) {
+		 							 slip_id = generatedKeys.getLong(1); 
+		 							 System.out.println(slip_id);
+		 						}
+		 						else {
+		 								throw new SQLException("Creating slip failed, no ID obtained.");
+		 						}
+		 				}
+		
+		 	}
+		
+		
+		 	catch (SQLException sqlex)
+		 	{
+		 		JOptionPane.showMessageDialog(null,sqlex.getMessage(),"Database Insert Failed",JOptionPane.ERROR_MESSAGE);
+		 		result = 0;
+		 	}
+		
+		 	return result;
+		 }
+	 
+	//add new lease
+		 public int addLease(Date leaseStartDate, Date leaseEndDate)
+			 {
+			 	int result = 0;
+			
+			 	try
+			 	{
+			 		insertNewLease = connection.prepareStatement("INSERT INTO LEASE (customer_id, vin, slip_id, lease_start_date, lease_end_date)"
+			 														+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			 		
+			 		insertNewLease.setLong(1,customer_id);
+			 		insertNewLease.setLong(2,boat_vin);
+			 		insertNewLease.setLong(3,slip_id);
+			 		insertNewLease.setDate(4, leaseStartDate);
+			 		insertNewLease.setDate(5,leaseEndDate);
+			
+			 		result = insertNewLease.executeUpdate();
+			 		System.out.println(result);
+			
+			 		//get newly inserted record id
+			 				if (result == 0) {
+			 						throw new SQLException("Creating new lease failed, no rows affected.");
+			 				}
+			 				try (ResultSet generatedKeys = insertNewSlip.getGeneratedKeys()) {
+			 						if (generatedKeys.next()) {
+			 							 lease_id = generatedKeys.getLong(1); 
+			 							 System.out.println("Lease ID is " + lease_id);
+			 						}
+			 						else {
+			 								throw new SQLException("Creating lease failed, no ID obtained.");
+			 						}
+			 				}
+			
+			 	}
+			
+			
+			 	catch (SQLException sqlex)
+			 	{
+			 		JOptionPane.showMessageDialog(null,sqlex.getMessage(),"Database Insert Failed",JOptionPane.ERROR_MESSAGE);
+			 		result = 0;
+			 	}
+			
+			 	return result;
+			 }
 	
 	
 	
@@ -232,11 +333,11 @@ public class DatabaseManager {
 				System.out.println(resultSet.getString(3));
 				
 				// Add values to Boat object
-				results[i].setVin(resultSet.getString(1));
-				results[i].setCustomerID(resultSet.getString(2));
-				results[i].setMake(resultSet.getString(3));
-				results[i].setModel(resultSet.getString(4));
-				results[i].setColor(resultSet.getString(5));
+				results[i].setVin(Integer.toString(resultSet.getInt(1)));			
+				results[i].setMake(resultSet.getString(2));
+				results[i].setModel(resultSet.getString(3));
+				results[i].setColor(resultSet.getString(4));
+				results[i].setCustomerID(resultSet.getString(5));
 				results[i].setIsPowered(resultSet.getString(6));
 			}
 			return results;
@@ -264,6 +365,7 @@ public class DatabaseManager {
 			selectSlips.setString(2, "%" + term + "%");
 			selectSlips.setString(3, "%" + term + "%");
 			selectSlips.setString(4, "%" + term + "%");
+									
 			resultSet = selectSlips.executeQuery();
 			
 			// Calculate the number of rows in the ResultSet
@@ -364,6 +466,22 @@ public class DatabaseManager {
 		
 	}
 	
+	public void deleteCustomer(Long customerID)
+	{
+		try {
+			deleteCustomer = connection.prepareStatement("DELETE FROM Customer WHERE customer_id = ?");
+			customer_id = customerID;
+			deleteCustomer.executeUpdate();
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Delete Customer Failed", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+	
+	
+	
+	
+	
 	private int getRowCount(ResultSet rs){
 		int size = 0;
 		try {
@@ -378,9 +496,21 @@ public class DatabaseManager {
 		return size;
 	}
 	
+	
+	
+	
+	
+	
+	
 	public long GetCustomerID()
 	{ return customer_id;}
 	
 	public long GetBoatVin()
 	{ return boat_vin;}
+	
+	public long GetSLipID()
+	{ return slip_id;}
+	
+	public long GetLeaseID()
+	{ return lease_id;}
 }

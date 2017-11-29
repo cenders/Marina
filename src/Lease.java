@@ -15,6 +15,12 @@ public class Lease {
 		setLeaseStartDate("");
 		setLeaseEndDate("");
 	}
+	
+	public void setAllLeaseInfo(String leaseStartDate, String leaseEndDate){
+	 	
+		this.leaseStartDate = leaseStartDate;
+	 	this.leaseEndDate = leaseEndDate;
+	 }
 
 	/**
 	 * @return the leaseID
