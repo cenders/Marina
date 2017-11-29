@@ -24,8 +24,13 @@ public class DatabaseManager {
 	PreparedStatement insertNewSlip = null;
 	PreparedStatement insertNewLease = null;
 	
-	PreparedStatement deleteCustomer = null;
+	PreparedStatement updateCustomerRecord = null;
 
+	
+	PreparedStatement deleteCustomerRecord = null;
+	PreparedStatement deleteBoatRecord = null;
+
+	
 	
 	long customer_id;
 	long boat_vin;
@@ -73,7 +78,7 @@ public class DatabaseManager {
 	        }
 	        try (ResultSet generatedKeys = insertNewCustomer.getGeneratedKeys()) {
 	            if (generatedKeys.next()) {
-	               customer_id = generatedKeys.getLong(1); ///////////////////////////////////////
+	               customer_id = generatedKeys.getLong(1); 
 	               System.out.println(customer_id);
 	            }
 	            else {
@@ -194,7 +199,6 @@ public class DatabaseManager {
 			 		insertNewLease = connection.prepareStatement("INSERT INTO LEASE (customer_id, vin, slip_id, lease_start_date, lease_end_date)"
 			 														+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
-			 		
 			 		insertNewLease.setLong(1,customer_id);
 			 		insertNewLease.setLong(2,vin);
 			 		insertNewLease.setLong(3,slip_id);
@@ -450,7 +454,25 @@ public class DatabaseManager {
 		}
 	}
 	
-	public void updateCustomer(Customer cust){
+	public void updateCustomer(String fname, //String lname, String pay, String phone, String str, String city, String zip, 
+			Long customerID){
+		try {
+			System.out.println("Start try");
+
+			updateCustomerRecord = connection.prepareStatement("UPDATE Customer SET first_name = ? WHERE customer_id = ?");
+					
+					//("UPDATE Customer SET first_name = ?, last_name = ?, payment_info = ?, phone_number = ?, street_address = ?, city = ?, state = ?, zip =? WHERE customer_id = ?");
+			//("UPDATE Employee SET PayRate = ?, HoursWorked = ? WHERE LastName = ?")
+			updateCustomerRecord.setString(1,fname);
+			//updateCustomerInfo.setString(2,lname);
+// add more ++++++++++++++++
+			updateCustomerRecord.setLong(2,customerID);
+			updateCustomerRecord.executeUpdate();
+			System.out.println("Update Complete");
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Delete Customer Failed", JOptionPane.ERROR_MESSAGE);
+		}
+		
 		
 	}
 	
@@ -469,9 +491,30 @@ public class DatabaseManager {
 	public void deleteCustomer(Long customerID)
 	{
 		try {
-			deleteCustomer = connection.prepareStatement("DELETE FROM Customer WHERE customer_id = ?");
-			customer_id = customerID;
-			deleteCustomer.executeUpdate();
+			System.out.println("Delete Start try");
+
+			deleteCustomerRecord = connection.prepareStatement("DELETE FROM Customer WHERE customer_id = ?");
+			System.out.println("before setLong customerID");
+
+			deleteCustomerRecord.setLong(1,customerID);
+			System.out.println("after setLong");
+
+			deleteCustomerRecord.executeUpdate();
+			
+			System.out.println("Delete Complete");
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Delete Customer Failed", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+	
+	public void deleteBoat(Long vin)
+	{
+		try {
+			deleteBoatRecord = connection.prepareStatement("DELETE FROM Boat WHERE vin = ?");
+			deleteBoatRecord.setLong(1,vin);
+			deleteBoatRecord.executeUpdate();
+			System.out.println("Delete Boat Complete");
 		} catch (SQLException sqlex) {
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Delete Customer Failed", JOptionPane.ERROR_MESSAGE);
 		}
