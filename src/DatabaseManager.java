@@ -9,7 +9,7 @@ import java.sql.Date;
 import javax.swing.JOptionPane;
 
 public class DatabaseManager {
-	static final String DATABASE_URL = "jdbc:ucanaccess://../Database/Marina.accdb";
+	static final String DATABASE_URL = static final String DATABASE_URL = "jdbc:ucanaccess://../Database/Marina.accdb";
 	Connection connection = null;
 	Statement statement = null;
 	Statement selectAllCustomers = null;
@@ -345,10 +345,10 @@ public class DatabaseManager {
 
 				// Add values to Boat object
 				results[i].setVin(Integer.toString(resultSet.getInt(1)));
-				results[i].setMake(resultSet.getString(3));
-				results[i].setModel(resultSet.getString(4));
-				results[i].setColor(resultSet.getString(5));
-				results[i].setCustomerID(resultSet.getString(2));
+				results[i].setMake(resultSet.getString(2));
+				results[i].setModel(resultSet.getString(3));
+				results[i].setColor(resultSet.getString(4));
+				results[i].setCustomerID(resultSet.getString(5));
 				results[i].setIsPowered(resultSet.getString(6));
 			}
 			return results;
@@ -525,15 +525,15 @@ public class DatabaseManager {
 
 
 
-	public void updateLease(Long customerID, Long vin, Long slipID, String leaseStartDate, String leaseEndDate, Long leaseID){
+	public void updateLease(Long customerID, Long vin, Long slipID, Date leaseStartDate, Date leaseEndDate, Long leaseID){
 		try {
-			updateLeaseRecord = connection.prepareStatement("UPDATE Lease SET customer_id = ?, vin = ?, slip_id = ?, lease_start_end = ?, lease_end_date = ? WHERE lease_id = ?");
+			updateLeaseRecord = connection.prepareStatement("UPDATE Lease SET customer_id = ?, vin = ?, slip_id = ?, lease_start_date = ?, lease_end_date = ? WHERE lease_id = ?");
 
 			updateLeaseRecord.setLong(1, customerID);
 			updateLeaseRecord.setLong(2, vin);
 			updateLeaseRecord.setLong(3, slipID);
-			updateLeaseRecord.setString(4, leaseStartDate);
-			updateLeaseRecord.setString(5, leaseEndDate);
+			updateLeaseRecord.setDate(4, leaseStartDate);
+			updateLeaseRecord.setDate(5, leaseEndDate);
 			updateLeaseRecord.setLong(6, leaseID);
 
 			updateLeaseRecord.executeUpdate();

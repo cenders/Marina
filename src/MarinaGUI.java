@@ -18,13 +18,14 @@ public class MarinaGUI extends JFrame {
 	private JButton createButton = new JButton("Create");
 	private JButton deleteButton = new JButton("Delete");
 	private JButton findButton = new JButton("Find");
+	private JButton clearButton = new JButton("Clear"); 
 	private JButton editButton = new JButton("Edit");
 	private JButton updateButton = new JButton("Update");
 	private JButton executeSearchButton = new JButton("Find");
 
 	private JPanel contentPanel = new JPanel();
 	private JPanel tablePanel = new JPanel();
-	private JPanel buttonPanel = new JPanel(new GridLayout(7, 1, 1, 5));
+	private JPanel buttonPanel = new JPanel(new GridLayout(8, 1, 1, 5)); 
 	private JPanel searchPanel = new JPanel();
 	private JPanel customerPanel = new JPanel();
 	private JPanel boatPanel = new JPanel();
@@ -155,7 +156,7 @@ public class MarinaGUI extends JFrame {
 		tabbedPane.addTab("Boats", boatPanel);
 		boatPanel.setLayout(new BorderLayout());
 
-		boatLBPanel.setLayout(new GridLayout(5, 0, 1, 1));
+		boatLBPanel.setLayout(new GridLayout(4, 0, 1, 1));
 		// boatLBPanel.add(customerIDLB);
 		boatLBPanel.add(makeLB);
 		boatLBPanel.add(modelLB);
@@ -164,7 +165,7 @@ public class MarinaGUI extends JFrame {
 
 		boatPanel.add(boatLBPanel, BorderLayout.WEST);
 
-		boatTFPanel.setLayout(new GridLayout(5, 0, 1, 1));
+		boatTFPanel.setLayout(new GridLayout(4, 0, 1, 1));
 		// boatTFPanel.add(vinTF);
 		// boatTFPanel.add(customerIDTF);
 		boatTFPanel.add(makeTF);
@@ -235,6 +236,7 @@ public class MarinaGUI extends JFrame {
 		buttonPanel.add(createButton);
 		buttonPanel.add(deleteButton);
 		buttonPanel.add(findButton);
+		buttonPanel.add(clearButton); 
 		buttonPanel.add(editButton);
 		buttonPanel.add(updateButton);
 
@@ -269,6 +271,7 @@ public class MarinaGUI extends JFrame {
 
 		createButton.addActionListener(listener);
 		findButton.addActionListener(listener);
+		clearButton.addActionListener(listener); 
 		editButton.addActionListener(listener);
 		updateButton.addActionListener(listener);
 		deleteButton.addActionListener(listener);
@@ -653,10 +656,10 @@ public class MarinaGUI extends JFrame {
 						        java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
 						        java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
-						    /*
+						    
 							db.updateLease(Long.valueOf(customerIDTF.getText()), Long.valueOf(vinTF.getText()), Long.valueOf(slipIDTF.getText()),
 									sqlStartDate, sqlEndDate, Long.valueOf(lease.getLeaseID()));
-							*/
+							
 						}
 					}
 
@@ -698,6 +701,52 @@ public class MarinaGUI extends JFrame {
 
 						}
 					}
+					
+					//Clear button is pressed
+					if(event.getSource() == clearButton){
+						int selection = tabbedPane.getSelectedIndex();
+						
+						// For each tab, create the respective object, populate it, and update the database
+						switch(selection){
+						case 0:
+							// clear all text fields
+							customerIDTF.setText("");
+							fnameTF.setText("");
+							lnameTF.setText("");
+							paymentTF.setText("");
+							phoneTF.setText("");
+							streetTF.setText("");
+							cityTF.setText("");
+							stateTF.setText("");
+							zipcodeTF.setText("");
+							break;
+							
+						case 1:
+							vinTF.setText("");
+							makeTF.setText("");
+							modelTF.setText("");
+							colorTF.setText("");
+							isPoweredBoatTF.setText("");
+							break;
+							
+						case 2:
+							slipIDTF.setText("");
+							isPoweredSlipTF.setText("");
+							isLeasedTF.setText("");
+							isOccupiedTF.setText("");
+							break;
+							
+						case 3:
+							customerIDTF.setText("");
+							vinTF.setText("");
+							slipIDTF.setText("");
+							leaseStartDateTF.setValue(new Date());
+							leaseEndDateTF.setValue(new Date());
+							break;
+					
+						}
+					}
+					
 
 			//Left arrow button is pressed
 			if(event.getSource() == previousButton){
@@ -730,6 +779,7 @@ public class MarinaGUI extends JFrame {
 
 						// Set text fields with data
 						customerIDTF.setText(boatResults[boatArrowIterator - 1].getCustomerID());
+						vinTF.setText(boatResults[boatArrowIterator - 1].getVin());
 						makeTF.setText(boatResults[boatArrowIterator - 1].getMake());
 						modelTF.setText(boatResults[boatArrowIterator - 1].getModel());
 						colorTF.setText(boatResults[boatArrowIterator - 1].getColor());
@@ -742,6 +792,7 @@ public class MarinaGUI extends JFrame {
 						}
 
 						// Set text fields with data
+						slipIDTF.setText(slipResults[slipArrowIterator - 1].getSlipID());
 						isPoweredSlipTF.setText(slipResults[slipArrowIterator - 1].getIsPowered());
 						isLeasedTF.setText(slipResults[slipArrowIterator - 1].getIsLeased());
 						isOccupiedTF.setText(slipResults[slipArrowIterator - 1].getIsOccupied());
@@ -753,14 +804,16 @@ public class MarinaGUI extends JFrame {
 						}
 
 						// Set text fields with data
+						customerIDTF.setText(leaseResults[leaseArrowIterator - 1].getCustomerID());
 						vinTF.setText(leaseResults[leaseArrowIterator - 1].getVin());
 						slipIDTF.setText(leaseResults[leaseArrowIterator - 1].getSlipID());
-						leaseStartDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseStartDate());
-						leaseEndDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseEndDate());
+						leaseStartDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseStartDate().substring(0, 10));
+						leaseEndDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseEndDate().substring(0, 10));
 						break;
 				}
 			}
-
+			
+			
 			//Right arrow button is pressed
 			if(event.getSource() == nextButton){
 				// Get selected panel index
@@ -803,6 +856,7 @@ public class MarinaGUI extends JFrame {
 
 					// Set text fields with data
 					customerIDTF.setText(boatResults[boatArrowIterator - 1].getCustomerID());
+					vinTF.setText(boatResults[boatArrowIterator - 1].getVin());
 					makeTF.setText(boatResults[boatArrowIterator - 1].getMake());
 					modelTF.setText(boatResults[boatArrowIterator - 1].getModel());
 					colorTF.setText(boatResults[boatArrowIterator - 1].getColor());
@@ -818,6 +872,7 @@ public class MarinaGUI extends JFrame {
 					slipArrowIterator++;
 
 					// Set text fields with data
+					slipIDTF.setText(slipResults[slipArrowIterator - 1].getSlipID()); 
 					isPoweredSlipTF.setText(slipResults[slipArrowIterator - 1].getIsPowered());
 					isLeasedTF.setText(slipResults[slipArrowIterator - 1].getIsLeased());
 					isOccupiedTF.setText(slipResults[slipArrowIterator - 1].getIsOccupied());
@@ -832,10 +887,11 @@ public class MarinaGUI extends JFrame {
 					leaseArrowIterator++;
 
 					// Set text fields with data
+					customerIDTF.setText(leaseResults[leaseArrowIterator - 1].getCustomerID());
 					vinTF.setText(leaseResults[leaseArrowIterator - 1].getVin());
 					slipIDTF.setText(leaseResults[leaseArrowIterator - 1].getSlipID());
-					leaseStartDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseStartDate());
-					leaseEndDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseEndDate());
+					leaseStartDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseStartDate().substring(0, 10)); 
+					leaseEndDateTF.setText(leaseResults[leaseArrowIterator - 1].getLeaseEndDate().substring(0, 10));
 					break;
 				}
 			}
