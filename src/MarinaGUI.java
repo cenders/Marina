@@ -99,16 +99,8 @@ public class MarinaGUI extends JFrame{
 	
 	private JTextField slipIDTF = new JTextField(25);	
 
-<<<<<<< HEAD
-	private JTextField slipIDTF = new JTextField(25);
-//	private JTextField leaseStartDateTF = new JTextField(25);
-//	private JTextField leaseEndDateTF = new JTextField(25);
-	private JFormattedTextField leaseStartDateTF = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
-	private JFormattedTextField leaseEndDateTF = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
-=======
 	private JFormattedTextField leaseStartDateTF = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy"));
 	private JFormattedTextField leaseEndDateTF = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy"));
->>>>>>> 5c00c12491a116da11cc9213f6c2ee2a48ff01c4
 
 	private JPanel leaseLBPanel  = new JPanel();
 	private JPanel leaseTFPanel  = new JPanel();
@@ -471,22 +463,8 @@ public class MarinaGUI extends JFrame{
 				case 0:
 					customerResults = db.findCustomers(searchField.getText());
 					for(int i = 0; i < customerResults.length; i++){
-<<<<<<< HEAD
-						System.out.println(String.valueOf(customerResults[i].toString()));
-						customerResults[i].setCustomerID(customerResults[i].getCustomerID());
-						customerIDTF.setText(customerResults[i].getCustomerID());
-						fnameTF.setText(customerResults[i].getFirstName());
-						lnameTF.setText(customerResults[i].getLastName());
-						paymentTF.setText(customerResults[i].getPaymentInfo());
-						phoneTF.setText(customerResults[i].getPhoneNumber());
-						streetTF.setText(customerResults[i].getStreetAddress());
-						cityTF.setText(customerResults[i].getCity());
-						stateTF.setText(customerResults[i].getState());
-						zipcodeTF.setText(customerResults[i].getZip());
-=======
-						System.out.println(String.valueOf(customerResults[i].toString()));						
->>>>>>> 5c00c12491a116da11cc9213f6c2ee2a48ff01c4
 					}
+					
 					customerIDTF.setText(customerResults[0].getCustomerID());
 					fnameTF.setText(customerResults[0].getFirstName());
 					lnameTF.setText(customerResults[0].getLastName());
@@ -504,16 +482,6 @@ public class MarinaGUI extends JFrame{
 					boatResults = db.findBoats(searchField.getText());
 					for(int i = 0; i < boatResults.length; i++){
 						System.out.println(boatResults[i].toString());
-<<<<<<< HEAD
-
-						vinTF.setText(boatResults[i].getVin());
-						customerIDTF.setText(boatResults[i].getCustomerID());
-						makeTF.setText(boatResults[i].getMake());
-						modelTF.setText(boatResults[i].getModel()); //wrong info when testing
-						colorTF.setText(boatResults[i].getColor()); //wrong info when testing
-						isPoweredBoatTF.setText(boatResults[i].getIsPowered());
-=======
->>>>>>> 5c00c12491a116da11cc9213f6c2ee2a48ff01c4
 					}
 						
 						vinTF.setText(boatResults[0].getVin());
@@ -528,20 +496,6 @@ public class MarinaGUI extends JFrame{
 					slipResults = db.findSlips(searchField.getText());
 					for(int i = 0; i < slipResults.length; i++){
 						System.out.println(slipResults[i].toString());
-<<<<<<< HEAD
-
-						slipIDTF.setText(slipResults[i].getSlipID());
-						isPoweredSlipTF.setText(slipResults[i].getIsPowered());
-						isLeasedTF.setText(slipResults[i].getIsLeased());
-						isOccupiedTF.setText(slipResults[i].getIsOccupied());
-						
-//						System.out.println("Slip ID is" + slipResults[i].getSlipID());
-//						System.out.println("Slip isPowered is" + slipResults[i].getIsPowered());
-//						System.out.println("Slip isLeased is" + slipResults[i].getIsLeased());
-//						System.out.println("Slip isOccupied is" + slipResults[i].getIsOccupied());
-					
-=======
->>>>>>> 5c00c12491a116da11cc9213f6c2ee2a48ff01c4
 					}
 						
 						slipIDTF.setText(slipResults[0].getSlipID());
