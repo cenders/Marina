@@ -6,7 +6,10 @@ public class Lease {
 				   slipID,
 				   leaseStartDate,
 				   leaseEndDate;
-				   
+	
+	/**
+	 * Default constructor
+	 */
 	public Lease(){
 		setLeaseID("");
 		setCustomerID("");
@@ -16,8 +19,12 @@ public class Lease {
 		setLeaseEndDate("");
 	}
 	
+	/**
+	 * Sets data in the slip object
+	 * @param leaseStartDate The start date of the lease
+	 * @param leaseEndDate The end date of the lease
+	 */
 	public void setAllLeaseInfo(String leaseStartDate, String leaseEndDate){
-	 	
 		this.leaseStartDate = leaseStartDate;
 	 	this.leaseEndDate = leaseEndDate;
 	 }

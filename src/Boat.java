@@ -11,6 +11,10 @@ public class Boat {
 				   model,
 				   color,
 				   isPowered;
+	
+	/**
+	 * Default constructor
+	 */
 	public Boat(){
 		setVin("");
 		setCustomerID("");
@@ -20,6 +24,13 @@ public class Boat {
 		setIsPowered("");
 	}
 	
+	/**
+	 * Sets information in the boat object
+	 * @param make The make of the boat
+	 * @param model The model of the boat
+	 * @param color The color of the boat
+	 * @param isPowered Whether the boat is powered or not
+	 */
 	public void setAllBoatInfo(String make, String model, String color, String isPowered){
 		this.make = make;
 		this.model = model;

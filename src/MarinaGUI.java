@@ -470,9 +470,14 @@ public class MarinaGUI extends JFrame {
 				switch(selection){
 				case 0:
 					customerResults = db.findCustomers(searchField.getText());
+					
+					if(customerResults.length == 0){
+						break;
+					}
+					
 					for(int i = 0; i < customerResults.length; i++){
 					}
-
+					
 					customerIDTF.setText(customerResults[0].getCustomerID());
 					fnameTF.setText(customerResults[0].getFirstName());
 					lnameTF.setText(customerResults[0].getLastName());
@@ -486,6 +491,11 @@ public class MarinaGUI extends JFrame {
 
 				case 1:
 					boatResults = db.findBoats(searchField.getText());
+					
+					if(boatResults.length == 0){
+						break;
+					}
+					
 					for(int i = 0; i < boatResults.length; i++){
 						System.out.println(boatResults[i].toString());
 					}
@@ -500,6 +510,11 @@ public class MarinaGUI extends JFrame {
 
 				case 2:
 					slipResults = db.findSlips(searchField.getText());
+					
+					if(slipResults.length == 0){
+						break;
+					}
+					
 					for(int i = 0; i < slipResults.length; i++){
 						System.out.println(slipResults[i].toString());
 					}
@@ -512,9 +527,16 @@ public class MarinaGUI extends JFrame {
 
 				case 3:
 					leaseResults = db.findLeases(searchField.getText());
+					
+					if(leaseResults.length == 0){
+						break;
+					}
+					
 					for(int i = 0; i < leaseResults.length; i++){
 						System.out.println(leaseResults[i].toString());
 					}
+					
+					System.out.println("Days: " + db.getDayCount(Long.valueOf(leaseResults[0].getSlipID())));
 					
 					customerIDTF.setText(leaseResults[0].getCustomerID());
 					vinTF.setText(leaseResults[0].getVin());

@@ -4,6 +4,10 @@ public class Slip {
 				   isPowered,
 				   isLeased,
 				   isOccupied;
+	
+	/**
+	 * Default constructor
+	 */
 	public Slip(){
 		setSlipID("");
 		setIsPowered("");
@@ -11,6 +15,12 @@ public class Slip {
 		setIsOccupied("");
 	}
 	
+	/**
+	 * Sets data in the slip object
+	 * @param isPowered Whether the boat is powered
+	 * @param isLeased Whether the boat is leased
+	 * @param isOccupied Whether the slip is occupied
+	 */
 	public void setAllSlipInfo(String isPowered, String isLeased, String isOccupied){
 	 	this.isPowered = isPowered;
 	 	this.isLeased = isLeased;

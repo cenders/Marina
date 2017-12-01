@@ -8,6 +8,9 @@ import java.sql.Date;
 
 import javax.swing.JOptionPane;
 
+/**
+ * This class manages all database related functions of the program
+ */
 public class DatabaseManager {
 	static final String DATABASE_URL = "jdbc:ucanaccess://../Database/Marina.accdb";
 	Connection connection = null;
@@ -29,21 +32,21 @@ public class DatabaseManager {
 	PreparedStatement updateSlipRecord = null;
 	PreparedStatement updateLeaseRecord = null;
 
-
-
 	PreparedStatement deleteCustomerRecord = null;
 	PreparedStatement deleteBoatRecord = null;
 	PreparedStatement deleteSlipRecord = null;
 	PreparedStatement deleteLeaseRecord = null;
-
-
-
+	
+	PreparedStatement getDayCount = null;
 
 	long customer_id;
 	long boat_vin;
 	long slip_id;
 	long lease_id;
-
+	
+	/**
+	 * Creates a connection to the database
+	 */
 	public DatabaseManager(){
 		try{
 			// Establish connection to database
@@ -59,6 +62,11 @@ public class DatabaseManager {
 		}
 	}
 
+	/**
+	 * Adds a customer to the database
+	 * @param customer Customer object to insert
+	 * @return result SQL return code
+	 */
 	public int addCustomer(Customer customer)
 	{
 		int result = 0;
@@ -103,6 +111,15 @@ public class DatabaseManager {
 		return result;
 	}
 
+	/**
+	 * Add a boat to the database
+	 * @param customer_id The customer's ID #
+	 * @param make The make of the boat
+	 * @param model The model of the boat
+	 * @param color The color of the boat
+	 * @param isPowered Whether the boat is powered
+	 * @return result SQL return code
+	 */
 	public int addBoat(long customer_id, String make, String model, String color, boolean isPowered)
 	{
 		int result = 0;
@@ -153,7 +170,13 @@ public class DatabaseManager {
 	}
 
 
-	//add new slip
+	/**
+	 * Add a slip to the database
+	 * @param isPoweredSlip Whether the slip is powered
+	 * @param isLeased Whether the slip is leased
+	 * @param isOccupied Whether the slip is occupied
+	 * @return result SQL return code
+	 */
 	 public int addSlip(boolean isPoweredSlip, boolean isLeased, boolean isOccupied)
 		 {
 		 	int result = 0;
@@ -228,22 +251,20 @@ public class DatabaseManager {
 			 								throw new SQLException("Creating lease failed, no ID obtained.");
 			 						}
 			 				}
-
 			 	}
-
-
 			 	catch (SQLException sqlex)
 			 	{
 			 		JOptionPane.showMessageDialog(null,sqlex.getMessage(),"Database Insert Failed",JOptionPane.ERROR_MESSAGE);
 			 		result = 0;
 			 	}
-
 			 	return result;
 			 }
 
-
-
-
+	/**
+	* Find the customers matching a term
+	* @param term The term to search for
+	* @return Customer[] An array of Customer objects
+	*/
 	public Customer[] findCustomers(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -306,6 +327,11 @@ public class DatabaseManager {
 		}
 	}
 
+	/**
+	 * Find the boats matching a term
+	 * @param term The term to search for
+	 * @return Boat[] An array of Boat objects
+	 */
 	public Boat[] findBoats(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -360,6 +386,11 @@ public class DatabaseManager {
 		}
 	}
 
+	/**
+	 * Find the slips matching a term
+	 * @param term The term to search for
+	 * @return Slip[] An array of Slip objects
+	 */
 	public Slip[] findSlips(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -407,7 +438,12 @@ public class DatabaseManager {
 			return new Slip[0];
 		}
 	}
-
+	
+	/**
+	 * Find the leases matching a term
+	 * @param term The term to search for
+	 * @return Lease[] An array of Lease objects
+	 */
 	public Lease[] findLeases(String term){
 		try{
 			// Create search query to return all data associated with a string/substring
@@ -462,6 +498,10 @@ public class DatabaseManager {
 		}
 	}
 
+	/**
+	 * Update the customer information
+	 * @param customer The populated customer object that needs to be updated in the database
+	 */
 	public void updateCustomer(Customer customer){
 		try {
 			System.out.println("Start try");
@@ -485,6 +525,15 @@ public class DatabaseManager {
 		}
 	}
 
+	/**
+	 * Update information in a boat
+	 * @param customerID The customer's ID
+	 * @param make The make of the boat
+	 * @param model The model of the boat
+	 * @param color The color of the boat
+	 * @param isPoweredBoat Whether the boat is powered
+	 * @param vin The VIN # of the boat
+	 */
 	public void updateBoat(Long customerID, String make, String model, String color, Boolean isPoweredBoat, Long vin){
 		try {
 			updateBoatRecord = connection.prepareStatement("UPDATE Boat SET customer_id = ?, make = ?, model = ?, "
@@ -501,11 +550,15 @@ public class DatabaseManager {
 
 		} catch (SQLException sqlex) {
 			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Update Boat Information Failed", JOptionPane.ERROR_MESSAGE);		}
-
-
-
 	}
-
+	
+	/**
+	 * Update information in a slip
+	 * @param isPoweredSlip Whether the slip is for a powerboat
+	 * @param isLeased Whether the slip is leased
+	 * @param isOccupied Whether the slip is currently occupied
+	 * @param slipID The ID of the slip
+	 */
 	public void updateSlip(Boolean isPoweredSlip, Boolean isLeased, Boolean isOccupied, Long slipID){
 		try {
 			updateSlipRecord = connection.prepareStatement("UPDATE Slip SET is_powered_slip = ?, is_leased = ?, is_occupied = ? WHERE slip_id = ?");
@@ -524,7 +577,15 @@ public class DatabaseManager {
 		}
 
 
-
+	/**
+	 * Update information in a lease
+	 * @param customerID The Customer's ID #
+	 * @param vin The boat's VIN #
+	 * @param slipID The slip's ID
+	 * @param leaseStartDate The start date of the lease
+	 * @param leaseEndDate The end date of the lease
+	 * @param leaseID The ID of the lease
+	 */
 	public void updateLease(Long customerID, Long vin, Long slipID, Date leaseStartDate, Date leaseEndDate, Long leaseID){
 		try {
 			updateLeaseRecord = connection.prepareStatement("UPDATE Lease SET customer_id = ?, vin = ?, slip_id = ?, lease_start_date = ?, lease_end_date = ? WHERE lease_id = ?");
@@ -544,8 +605,10 @@ public class DatabaseManager {
 			}
 		}
 
-
-
+	/**
+	 * Delete a customer from the database
+	 * @param customerID The Customer ID of the customer to be deleted
+	 */
 	public void deleteCustomer(Long customerID)
 	{
 		try {
@@ -566,6 +629,10 @@ public class DatabaseManager {
 
 	}
 
+	/**
+	 * Delete a boat from the database
+	 * @param vin The VIN # of the boat to be deleted
+	 */
 	public void deleteBoat(Long vin)
 	{
 		try {
@@ -579,6 +646,10 @@ public class DatabaseManager {
 
 	}
 
+	/**
+	 * Delete a slip from the database
+	 * @param slipID The ID of the slip to be deleted
+	 */
 	public void deleteSlip(Long slipID)
 	{
 		try {
@@ -593,6 +664,10 @@ public class DatabaseManager {
 
 	}
 
+	/**
+	 * Delete a lease from the database
+	 * @param leaseID The ID of the lease to be deleted
+	 */
 	public void deleteLease(Long leaseID)
 	{
 		try {
@@ -606,12 +681,39 @@ public class DatabaseManager {
 		}
 
 	}
+	
+	/**
+	 * Calculate the amount of days in a lease
+	 * @param slipID The ID of the slip
+	 * @return count The amount of days
+	 */
+	public int getDayCount(Long slipID){
+		int count = 0;
+		try {
+			getDayCount = connection.prepareStatement("SELECT DateDiff('d', [lease_start_date], [lease_end_date]) AS Days FROM Lease WHERE slip_id = ?;",
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+				    ResultSet.CONCUR_READ_ONLY);
+			getDayCount.setLong(1, slipID);
+			
+			resultSet = getDayCount.executeQuery();
+			if(resultSet == null){
+				System.out.println("RS is null");
+				return 0;
+			}
+			resultSet.next();
+			count = resultSet.getInt(1);
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Couldn't get day count", JOptionPane.ERROR_MESSAGE);
+		}
+		return count;
+	}
 
-
-
-
-
-	private int getRowCount(ResultSet rs){
+	/**
+	 * Calculate how many rows are in a ResultSet
+	 * @param rs ResultSet to calculate rows in
+	 * @return size The amount of rows
+	 */
+	public int getRowCount(ResultSet rs){
 		int size = 0;
 		try {
 			rs.last();

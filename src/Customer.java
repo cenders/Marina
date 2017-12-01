@@ -15,6 +15,9 @@ public class Customer {
 				   state,
 				   zip;
 	
+	/**
+	 * Default constructor
+	 */
 	public Customer(){
 		setCustomerID("");
 		setFirstName("");
