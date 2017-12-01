@@ -56,7 +56,7 @@ public class DatabaseManager {
 		}
 	}
 	
-	public int addCustomer(String fname, String lname, String payment, String phone, String street, String city, String state, String zip)
+	public int addCustomer(Customer customer)
 	{
 		int result = 0;
 		
@@ -65,14 +65,14 @@ public class DatabaseManager {
 			insertNewCustomer = connection.prepareStatement("INSERT INTO CUSTOMER (first_name, last_name, payment_info, phone_number,street_address, city, state, zip)" 
 															+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); 
 		
-			insertNewCustomer.setString(1,fname);
-			insertNewCustomer.setString(2,lname);
-			insertNewCustomer.setString(3,payment);
-			insertNewCustomer.setString(4,phone);
-			insertNewCustomer.setString(5,street);
-			insertNewCustomer.setString(6,city);
-			insertNewCustomer.setString(7,state);
-			insertNewCustomer.setString(8,zip);
+			insertNewCustomer.setString(1,customer.getFirstName());
+			insertNewCustomer.setString(2,customer.getLastName());
+			insertNewCustomer.setString(3,customer.getPaymentInfo());
+			insertNewCustomer.setString(4,customer.getPhoneNumber());
+			insertNewCustomer.setString(5,customer.getStreetAddress());
+			insertNewCustomer.setString(6,customer.getCity());
+			insertNewCustomer.setString(7,customer.getState());
+			insertNewCustomer.setString(8,customer.getZip());
 						
 			result = insertNewCustomer.executeUpdate();
 			
@@ -459,24 +459,22 @@ public class DatabaseManager {
 		}
 	}
 	
-	public void updateCustomer(String fname, String lname, String pay, String phone, String str, String city, String state, String zip, Long customerID){
+	public void updateCustomer(Customer customer){
 		try {
 			System.out.println("Start try");
 
 			updateCustomerRecord = connection.prepareStatement("UPDATE Customer SET first_name = ?, last_name = ?, payment_info = ?, "
 					+ "phone_number = ?, street_address = ?, city = ?, state = ?, zip =? WHERE customer_id = ?");
-
-					//("UPDATE Customer SET first_name = ? WHERE customer_id = ?");
 					
-			updateCustomerRecord.setString(1,fname);
-			updateCustomerRecord.setString(2,lname);
-			updateCustomerRecord.setString(3,pay);
-			updateCustomerRecord.setString(4,phone);
-			updateCustomerRecord.setString(5,str);
-			updateCustomerRecord.setString(6,city);
-			updateCustomerRecord.setString(7,state);
-			updateCustomerRecord.setString(8,zip);
-			updateCustomerRecord.setLong(9,customerID);
+			updateCustomerRecord.setString(1,customer.getFirstName());
+			updateCustomerRecord.setString(2,customer.getLastName());
+			updateCustomerRecord.setString(3,customer.getPaymentInfo());
+			updateCustomerRecord.setString(4,customer.getPhoneNumber());
+			updateCustomerRecord.setString(5,customer.getStreetAddress());
+			updateCustomerRecord.setString(6,customer.getCity());
+			updateCustomerRecord.setString(7,customer.getState());
+			updateCustomerRecord.setString(8,customer.getZip());
+			updateCustomerRecord.setLong(9,Long.valueOf(customer.getCustomerID()));
 			updateCustomerRecord.executeUpdate();
 			System.out.println("Update Complete");
 		} catch (SQLException sqlex) {

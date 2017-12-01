@@ -38,7 +38,8 @@ public class Customer {
 	 * @param state the state to set
 	 * @param zip the zip to set
 	 */
-	public void setAllCustomerInfo(String firstName, String lastName,String paymentInfo, String phoneNumber, String streetAddress, String city, String state, String zip){
+	public Customer(String customerID, String firstName, String lastName, String paymentInfo, String phoneNumber, String streetAddress, String city, String state, String zip){
+		this.customerID = customerID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.paymentInfo = paymentInfo;

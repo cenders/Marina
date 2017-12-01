@@ -41,6 +41,7 @@ public class MarinaGUI extends JFrame{
 	ChoiceListener listener = new ChoiceListener();
 
 	//customerPanel
+	private JLabel customerIDLB = new JLabel("Customer ID", SwingConstants.RIGHT);
 	private JLabel fnameLB = new JLabel("First Name", SwingConstants.RIGHT);
 	private JLabel lnameLB = new JLabel("Last Name", SwingConstants.RIGHT);
 	private JLabel paymentLB = new JLabel("Payment Info", SwingConstants.RIGHT);
@@ -50,6 +51,7 @@ public class MarinaGUI extends JFrame{
 	private JLabel stateLB = new JLabel("State", SwingConstants.RIGHT);
 	private JLabel zipcodeLB = new JLabel("Zip Code", SwingConstants.RIGHT);
 
+	private JTextField customerIDTF = new JTextField(25);
 	private JTextField fnameTF = new JTextField(25);
 	private JTextField lnameTF = new JTextField(25);
 	private JTextField paymentTF = new JTextField(25);
@@ -63,13 +65,13 @@ public class MarinaGUI extends JFrame{
 	private JPanel customerTFPanel  = new JPanel();
 
 	//boatPanel
-	private JLabel customerIDLB = new JLabel("Customer ID", SwingConstants.RIGHT);
+	private JLabel customerBoatIDLB = new JLabel("Customer ID", SwingConstants.RIGHT);
 	private JLabel makeLB = new JLabel("Make", SwingConstants.RIGHT);
 	private JLabel modelLB = new JLabel("Model", SwingConstants.RIGHT);
 	private JLabel colorLB = new JLabel("Color", SwingConstants.RIGHT);
 	private JLabel isPoweredBoatLB = new JLabel("Is Powered Boat", SwingConstants.RIGHT);
 
-	private JTextField customerIDTF = new JTextField(25);
+	private JTextField customerBoatIDTF = new JTextField(25);
 	private JTextField makeTF = new JTextField(25);
 	private JTextField modelTF = new JTextField(25);
 	private JTextField colorTF = new JTextField(25);
@@ -122,7 +124,8 @@ public class MarinaGUI extends JFrame{
 		customerPanel.setLayout(new BorderLayout());
 		//customerPanel.add(topPanel, BorderLayout.NORTH);
 		
-		customerLBPanel.setLayout(new GridLayout(8,0,1,1));
+		customerLBPanel.setLayout(new GridLayout(9,0,1,1));
+		customerLBPanel.add(customerIDLB);
 		customerLBPanel.add(fnameLB);
 		customerLBPanel.add(lnameLB);
 		customerLBPanel.add(paymentLB);
@@ -134,7 +137,8 @@ public class MarinaGUI extends JFrame{
 
 		customerPanel.add(customerLBPanel, BorderLayout.WEST);
 
-		customerTFPanel.setLayout(new GridLayout(8,0,1,1));
+		customerTFPanel.setLayout(new GridLayout(9,0,1,1));
+		customerTFPanel.add(customerIDTF);
 		customerTFPanel.add(fnameTF);
 		customerTFPanel.add(lnameTF);
 		customerTFPanel.add(paymentTF);
@@ -153,7 +157,7 @@ public class MarinaGUI extends JFrame{
 		boatPanel.setLayout(new BorderLayout());
 
 		boatLBPanel.setLayout(new GridLayout(5,0,1,1));
-		boatLBPanel.add(customerIDLB);
+		//boatLBPanel.add(customerIDLB);
 		boatLBPanel.add(makeLB);
 		boatLBPanel.add(modelLB);
 		boatLBPanel.add(colorLB);
@@ -163,7 +167,7 @@ public class MarinaGUI extends JFrame{
 
 		boatTFPanel.setLayout(new GridLayout(5,0,1,1));
 		//boatTFPanel.add(vinTF);
-		boatTFPanel.add(customerIDTF);
+		//boatTFPanel.add(customerIDTF);
 		boatTFPanel.add(makeTF);
 		boatTFPanel.add(modelTF);
 		boatTFPanel.add(colorTF);
@@ -292,6 +296,11 @@ public class MarinaGUI extends JFrame{
 		Slip[] slipResults = new Slip[0];
 		Lease[] leaseResults = new Lease[0];
 		
+		Customer customer = new Customer();
+		Boat boat = new Boat();
+		Slip slip = new Slip();
+		Lease lease = new Lease();
+		
 		int customerArrowIterator = 1;
 		int boatArrowIterator = 1;
 		int slipArrowIterator = 1;
@@ -301,18 +310,15 @@ public class MarinaGUI extends JFrame{
 		// Create button is pressed
 			if(event.getSource() == createButton){
 				int selection = tabbedPane.getSelectedIndex();
-				Customer cust = new Customer();
-				Boat boat = new Boat();
-				Slip slip = new Slip();
-				Lease lease = new Lease();
+				
 				// For each tab, create the respective object, populate it, and update the database
 				switch(selection){
 				case 0:
-					//Customer cust = new Customer();
-					cust.setAllCustomerInfo(fnameTF.getText(), lnameTF.getText(), paymentTF.getText(), phoneTF.getText(), streetTF.getText(), cityTF.getText(),stateTF.getText(),zipcodeTF.getText());;
-
-					// Populate object
-					db.addCustomer(cust.getFirstName(),cust.getLastName(), cust.getPaymentInfo(), cust.getPhoneNumber(),cust.getStreetAddress(),cust.getCity(), cust.getState(), cust.getZip());
+					// Initialize customer object from form
+					Customer customer = new Customer(null, fnameTF.getText(), lnameTF.getText(), paymentTF.getText(), phoneTF.getText(), streetTF.getText(), cityTF.getText(),stateTF.getText(),zipcodeTF.getText());;
+					
+					// Add customer to database
+					db.addCustomer(customer);
 					customerIDTF.setText(String.valueOf(db.GetCustomerID()));;
 					break;
 
@@ -443,7 +449,7 @@ public class MarinaGUI extends JFrame{
 				}
 			}
 
-			//press find button
+			// Press find button
 			if(event.getSource() == findButton){
 				searchDialog.setTitle("Search");
 				searchDialog.setLayout(new BorderLayout());
@@ -474,8 +480,7 @@ public class MarinaGUI extends JFrame{
 					cityTF.setText(customerResults[0].getCity()); 
 					stateTF.setText(customerResults[0].getState());
 					zipcodeTF.setText(customerResults[0].getZip());
-					
-					outOfLabel.setText("1 out of " + customerResults.length + " results.");
+
 					break;
 					
 				case 1:
@@ -484,12 +489,12 @@ public class MarinaGUI extends JFrame{
 						System.out.println(boatResults[i].toString());
 					}
 						
-						vinTF.setText(boatResults[0].getVin());
-						customerIDTF.setText(boatResults[0].getCustomerID());
-						makeTF.setText(boatResults[0].getMake());
-						modelTF.setText(boatResults[0].getModel());
-						colorTF.setText(boatResults[0].getColor());
-						isPoweredBoatTF.setText(boatResults[0].getIsPowered());
+					vinTF.setText(boatResults[0].getVin());
+					customerIDTF.setText(boatResults[0].getCustomerID());
+					makeTF.setText(boatResults[0].getMake());
+					modelTF.setText(boatResults[0].getModel());
+					colorTF.setText(boatResults[0].getColor());
+					isPoweredBoatTF.setText(boatResults[0].getIsPowered());
 					break;
 					
 				case 2:
@@ -498,29 +503,23 @@ public class MarinaGUI extends JFrame{
 						System.out.println(slipResults[i].toString());
 					}
 						
-						slipIDTF.setText(slipResults[0].getSlipID());
-						isPoweredSlipTF.setText(slipResults[0].getIsPowered());
-						isLeasedTF.setText(slipResults[0].getIsLeased());
-						isOccupiedTF.setText(slipResults[0].getIsOccupied());
+					slipIDTF.setText(slipResults[0].getSlipID());
+					isPoweredSlipTF.setText(slipResults[0].getIsPowered());
+					isLeasedTF.setText(slipResults[0].getIsLeased());
+					isOccupiedTF.setText(slipResults[0].getIsOccupied());
 					break;
 					
 				case 3:
 					leaseResults = db.findLeases(searchField.getText());
 					for(int i = 0; i < leaseResults.length; i++){
 						System.out.println(leaseResults[i].toString());
-						
-						
-						customerIDTF.setText(leaseResults[i].getCustomerID());
-						vinTF.setText(leaseResults[i].getVin());
-						slipIDTF.setText(leaseResults[i].getSlipID());							
-						leaseStartDateTF.setText(leaseResults[i].getLeaseStartDate().substring(0,10));
-						leaseEndDateTF.setText(leaseResults[i].getLeaseEndDate().substring(0,10));
-						
-						
-						
-
-
 					}
+					
+					customerIDTF.setText(leaseResults[0].getCustomerID());
+					vinTF.setText(leaseResults[0].getVin());
+					slipIDTF.setText(leaseResults[0].getSlipID());							
+					leaseStartDateTF.setText(leaseResults[0].getLeaseStartDate().substring(0,10));
+					leaseEndDateTF.setText(leaseResults[0].getLeaseEndDate().substring(0,10));
 				}
 			}
 
@@ -551,10 +550,10 @@ public class MarinaGUI extends JFrame{
 				// For each tab, create the respective object, populate it, and update the database
 				switch(selection){
 				case 0:
-					Customer cust = new Customer();
-					// Populate object
-					db.updateCustomer(fnameTF.getText(),lnameTF.getText(), phoneTF.getText(), streetTF.getText(), cityTF.getText(), 
-							paymentTF.getText(), stateTF.getText(), zipcodeTF.getText(), Long.valueOf(customerIDTF.getText()));
+					System.out.println("Customer ID: " + customerIDTF.getText());
+					Customer customer = new Customer(customerIDTF.getText(), fnameTF.getText(),lnameTF.getText(), phoneTF.getText(), streetTF.getText(), cityTF.getText(), 
+							paymentTF.getText(), stateTF.getText(), zipcodeTF.getText());
+					db.updateCustomer(customer);
 					break;
 				case 1:
 					Boat boat = new Boat();
