@@ -101,8 +101,8 @@ public class MarinaGUI extends JFrame {
 
 	private JTextField slipIDTF = new JTextField(25);
 
-	private JFormattedTextField leaseStartDateTF = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy"));
-	private JFormattedTextField leaseEndDateTF = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy"));
+	private JFormattedTextField leaseStartDateTF = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
+	private JFormattedTextField leaseEndDateTF = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
 
 	private JPanel leaseLBPanel = new JPanel();
 	private JPanel leaseTFPanel = new JPanel();
@@ -682,15 +682,18 @@ public class MarinaGUI extends JFrame {
 
 						case 2:
 							Slip slip = new Slip();
+							slip.setSlipID(slipIDTF.getText());
 							// Populate object
-							//db.updateSlip(slip);
+							db.deleteSlip(Long.valueOf(slip.getSlipID()));
 							System.out.println("slip Delete button");
 
 							break;
 						case 3:
 							Lease lease = new Lease();
 							// Populate object
-							//db.updateLease(lease);
+							System.out.println(db.GetLeaseID());
+							// Populate object
+							db.deleteSlip(db.GetLeaseID());
 							System.out.println("lease Delete button");
 
 						}
