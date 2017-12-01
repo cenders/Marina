@@ -345,10 +345,10 @@ public class DatabaseManager {
 
 				// Add values to Boat object
 				results[i].setVin(Integer.toString(resultSet.getInt(1)));
-				results[i].setMake(resultSet.getString(2));
-				results[i].setModel(resultSet.getString(3));
-				results[i].setColor(resultSet.getString(4));
-				results[i].setCustomerID(resultSet.getString(5));
+				results[i].setCustomerID(resultSet.getString(2));
+				results[i].setMake(resultSet.getString(3));
+				results[i].setModel(resultSet.getString(4));
+				results[i].setColor(resultSet.getString(5));
 				results[i].setIsPowered(resultSet.getString(6));
 			}
 			return results;
