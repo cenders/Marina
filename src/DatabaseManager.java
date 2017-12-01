@@ -25,6 +25,10 @@ public class DatabaseManager {
 	PreparedStatement insertNewLease = null;
 	
 	PreparedStatement updateCustomerRecord = null;
+	PreparedStatement updateBoatRecord = null;
+	PreparedStatement updateSlipRecord = null;
+	PreparedStatement updateLeaseRecord = null;
+
 
 	
 	PreparedStatement deleteCustomerRecord = null;
@@ -387,10 +391,10 @@ public class DatabaseManager {
 				results[i] = new Slip();
 				
 				// Add values to Slip object
-				results[i].setSlipID(Integer.toString(1));
-				results[i].setIsPowered(Integer.toString(2));
-				results[i].setIsLeased(Integer.toString(3));
-				results[i].setIsOccupied(Integer.toString(4));
+				results[i].setSlipID(Integer.toString(resultSet.getInt(1)));
+				results[i].setIsPowered(resultSet.getString(2));
+				results[i].setIsLeased(resultSet.getString(3));
+				results[i].setIsOccupied(resultSet.getString(4));
 			}
 			return results;
 		}
@@ -439,11 +443,12 @@ public class DatabaseManager {
 				
 				// Add values to Lease object
 				results[i].setLeaseID(Integer.toString(resultSet.getInt(1)));
-				results[i].setCustomerID(Integer.toString(resultSet.getInt(2)));
+				results[i].setSlipID(Integer.toString(resultSet.getInt(2)));
 				results[i].setVin(Integer.toString(resultSet.getInt(3)));
-				results[i].setSlipID(Integer.toString(resultSet.getInt(4)));
+				results[i].setCustomerID(Integer.toString(resultSet.getInt(4)));
 				results[i].setLeaseStartDate(resultSet.getString(5));
 				results[i].setLeaseEndDate(resultSet.getString(6));
+				lease_id = resultSet.getInt(1);
 			}
 			return results;
 		}
@@ -454,39 +459,91 @@ public class DatabaseManager {
 		}
 	}
 	
-	public void updateCustomer(String fname, //String lname, String pay, String phone, String str, String city, String zip, 
-			Long customerID){
+	public void updateCustomer(String fname, String lname, String pay, String phone, String str, String city, String state, String zip, Long customerID){
 		try {
 			System.out.println("Start try");
 
-			updateCustomerRecord = connection.prepareStatement("UPDATE Customer SET first_name = ? WHERE customer_id = ?");
+			updateCustomerRecord = connection.prepareStatement("UPDATE Customer SET first_name = ?, last_name = ?, payment_info = ?, "
+					+ "phone_number = ?, street_address = ?, city = ?, state = ?, zip =? WHERE customer_id = ?");
+
+					//("UPDATE Customer SET first_name = ? WHERE customer_id = ?");
 					
-					//("UPDATE Customer SET first_name = ?, last_name = ?, payment_info = ?, phone_number = ?, street_address = ?, city = ?, state = ?, zip =? WHERE customer_id = ?");
-			//("UPDATE Employee SET PayRate = ?, HoursWorked = ? WHERE LastName = ?")
 			updateCustomerRecord.setString(1,fname);
-			//updateCustomerInfo.setString(2,lname);
-// add more ++++++++++++++++
-			updateCustomerRecord.setLong(2,customerID);
+			updateCustomerRecord.setString(2,lname);
+			updateCustomerRecord.setString(3,pay);
+			updateCustomerRecord.setString(4,phone);
+			updateCustomerRecord.setString(5,str);
+			updateCustomerRecord.setString(6,city);
+			updateCustomerRecord.setString(7,state);
+			updateCustomerRecord.setString(8,zip);
+			updateCustomerRecord.setLong(9,customerID);
 			updateCustomerRecord.executeUpdate();
 			System.out.println("Update Complete");
 		} catch (SQLException sqlex) {
-			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Delete Customer Failed", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Update Customer Information Failed", JOptionPane.ERROR_MESSAGE);
+		}			
+	}
+	
+	public void updateBoat(Long customerID, String make, String model, String color, Boolean isPoweredBoat, Long vin){
+		try {
+			updateBoatRecord = connection.prepareStatement("UPDATE Boat SET customer_id = ?, make = ?, model = ?, "
+					+ "color = ?, is_powered_boat = ? WHERE vin = ?");
+			
+			updateBoatRecord.setLong(1,customerID);
+			updateBoatRecord.setString(2,make);
+			updateBoatRecord.setString(3,model);
+			updateBoatRecord.setString(4,color);
+			updateBoatRecord.setBoolean(5,isPoweredBoat);
+			updateBoatRecord.setLong(6,vin);
+			
+			updateBoatRecord.executeUpdate();
+			
+		} catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Update Boat Information Failed", JOptionPane.ERROR_MESSAGE);		}
+		
+		
+		
+	}
+	
+	public void updateSlip(Boolean isPoweredSlip, Boolean isLeased, Boolean isOccupied, Long slipID){
+		try {
+			updateSlipRecord = connection.prepareStatement("UPDATE Slip SET is_powered_slip = ?, is_leased = ?, is_occupied = ? WHERE slip_id = ?");
+			
+			updateSlipRecord.setBoolean(1, isPoweredSlip); //this column is not updating????
+			updateSlipRecord.setBoolean(2, isLeased);
+			updateSlipRecord.setBoolean(3, isOccupied);
+			updateSlipRecord.setLong(4, slipID);
+			
+			updateSlipRecord.executeUpdate();
+	
+			} 
+		catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Update Boat Information Failed", JOptionPane.ERROR_MESSAGE);		
+			}
 		}
 		
-		
-	}
+
 	
-	public void updateBoat(Boat boat){
+	public void updateLease(Long customerID, Long vin, Long slipID, String leaseStartDate, String leaseEndDate, Long leaseID){
+		try {
+			updateLeaseRecord = connection.prepareStatement("UPDATE Lease SET customer_id = ?, vin = ?, slip_id = ?, lease_start_end = ?, lease_end_date = ? WHERE lease_id = ?");
+			
+			updateLeaseRecord.setLong(1, customerID); 
+			updateLeaseRecord.setLong(2, vin);
+			updateLeaseRecord.setLong(3, slipID);
+			updateLeaseRecord.setString(4, leaseStartDate);
+			updateLeaseRecord.setString(5, leaseEndDate);
+			updateLeaseRecord.setLong(6, leaseID);
 		
-	}
+			updateLeaseRecord.executeUpdate();
 	
-	public void updateSlip(Slip slip){
-		
-	}
+			} 
+		catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Update Boat Information Failed", JOptionPane.ERROR_MESSAGE);		
+			}
+		}
 	
-	public void updateLease(Lease lease){
-		
-	}
+	
 	
 	public void deleteCustomer(Long customerID)
 	{
@@ -556,4 +613,5 @@ public class DatabaseManager {
 	
 	public long GetLeaseID()
 	{ return lease_id;}
+	
 }
