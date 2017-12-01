@@ -9,7 +9,7 @@ import java.sql.Date;
 import javax.swing.JOptionPane;
 
 public class DatabaseManager {
-	static final String DATABASE_URL = static final String DATABASE_URL = "jdbc:ucanaccess://../Database/Marina.accdb";
+	static final String DATABASE_URL = "jdbc:ucanaccess://../Database/Marina.accdb";
 	Connection connection = null;
 	Statement statement = null;
 	Statement selectAllCustomers = null;
@@ -395,9 +395,9 @@ public class DatabaseManager {
 
 				// Add values to Slip object
 				results[i].setSlipID(Integer.toString(resultSet.getInt(1)));
-				results[i].setIsPowered(resultSet.getString(2));
-				results[i].setIsLeased(resultSet.getString(3));
-				results[i].setIsOccupied(resultSet.getString(4));
+				results[i].setIsLeased(resultSet.getString(2));
+				results[i].setIsOccupied(resultSet.getString(3));
+				results[i].setIsPowered(resultSet.getString(4));
 			}
 			return results;
 		}
