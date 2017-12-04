@@ -31,7 +31,9 @@ public class Boat {
 	 * @param color The color of the boat
 	 * @param isPowered Whether the boat is powered or not
 	 */
-	public void setAllBoatInfo(String make, String model, String color, String isPowered){
+	public Boat(String vin, String customerID, String make, String model, String color, String isPowered){
+		this.vin = vin;
+		this.customerID = customerID;
 		this.make = make;
 		this.model = model;
 		this.color = color;

@@ -120,25 +120,22 @@ public class DatabaseManager {
 	 * @param isPowered Whether the boat is powered
 	 * @return result SQL return code
 	 */
-	public int addBoat(long customer_id, String make, String model, String color, boolean isPowered)
+	public int addBoat(Boat boat)
 	{
 		int result = 0;
 
 		try
 		{
 			insertNewBoat = connection.prepareStatement
-					//("UPDATE Boat SET make = ? WHERE customer_id = ?");
-					//("UPDATE Employee SET FirstName = '" + fname + "' WHERE EmployeeID = ' " + employeeID + "'");
-					//("UPDATE Boat SET make = ?, model = ?, color = ?, is_powered_boat = ? WHERE customer_id = ?");
 					("INSERT INTO BOAT (customer_id, make, model, color, is_powered_boat)"
 														+ " VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 
-			insertNewBoat.setLong(1,customer_id);
-			insertNewBoat.setString(2,make);
-			insertNewBoat.setString(3,model);
-			insertNewBoat.setString(4,color);
-			insertNewBoat.setBoolean(5,isPowered);
+			insertNewBoat.setLong(1,Long.valueOf(boat.getCustomerID()));
+			insertNewBoat.setString(2,boat.getMake());
+			insertNewBoat.setString(3,boat.getModel());
+			insertNewBoat.setString(4,boat.getColor());
+			insertNewBoat.setString(5,boat.getIsPowered());
 
 			result = insertNewBoat.executeUpdate();
 			System.out.println(result);
@@ -220,7 +217,7 @@ public class DatabaseManager {
 		 }
 
 	//add new lease
-		 public int addLease(Long customer_id, Long vin, Long slip_id, Date leaseStartDate, Date leaseEndDate)
+		 public int addLease(Lease lease)
 			 {
 			 	int result = 0;
 
@@ -229,11 +226,12 @@ public class DatabaseManager {
 			 		insertNewLease = connection.prepareStatement("INSERT INTO LEASE (customer_id, vin, slip_id, lease_start_date, lease_end_date)"
 			 														+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-			 		insertNewLease.setLong(1,customer_id);
-			 		insertNewLease.setLong(2,vin);
-			 		insertNewLease.setLong(3,slip_id);
-			 		insertNewLease.setDate(4, leaseStartDate);
-			 		insertNewLease.setDate(5,leaseEndDate);
+			 		insertNewLease.setLong(1, Long.valueOf(lease.getCustomerID()));
+			 		insertNewLease.setLong(2, Long.valueOf(lease.getVin()));
+			 		System.out.println(lease.getSlipID());
+			 		insertNewLease.setLong(3, Long.valueOf(lease.getSlipID()));
+			 		insertNewLease.setString(4, lease.getLeaseStartDate().toString());
+			 		insertNewLease.setString(5, lease.getLeaseEndDate().toString());
 
 			 		result = insertNewLease.executeUpdate();
 			 		System.out.println(result);
@@ -485,8 +483,10 @@ public class DatabaseManager {
 				results[i].setSlipID(Integer.toString(resultSet.getInt(2)));
 				results[i].setVin(Integer.toString(resultSet.getInt(3)));
 				results[i].setCustomerID(Integer.toString(resultSet.getInt(4)));
-				results[i].setLeaseStartDate(resultSet.getString(5));
-				results[i].setLeaseEndDate(resultSet.getString(6));
+				//results[i].setLeaseStartDate(resultSet.getString(5));
+				//results[i].setLeaseEndDate(resultSet.getString(6));
+				results[i].setLeaseStartDate(resultSet.getTimestamp(5));
+				results[i].setLeaseEndDate(resultSet.getTimestamp(6));
 				lease_id = resultSet.getInt(1);
 			}
 			return results;

@@ -1,11 +1,12 @@
+import java.sql.Timestamp;
 
 public class Lease {
 	private String leaseID,
 				   customerID,
 				   vin,
-				   slipID,
-				   leaseStartDate,
-				   leaseEndDate;
+				   slipID;
+	Timestamp leaseEndDate;
+	Timestamp leaseStartDate;
 	
 	/**
 	 * Default constructor
@@ -15,18 +16,22 @@ public class Lease {
 		setCustomerID("");
 		setVin("");
 		setSlipID("");
-		setLeaseStartDate("");
-		setLeaseEndDate("");
+		setLeaseStartDate(leaseStartDate);
+		setLeaseEndDate(leaseEndDate);
 	}
 	
 	/**
 	 * Sets data in the slip object
-	 * @param leaseStartDate The start date of the lease
-	 * @param leaseEndDate The end date of the lease
+	 * @param lsd The start date of the lease
+	 * @param led The end date of the lease
 	 */
-	public void setAllLeaseInfo(String leaseStartDate, String leaseEndDate){
-		this.leaseStartDate = leaseStartDate;
-	 	this.leaseEndDate = leaseEndDate;
+	public Lease(String leaseID, String customerID, String vin, String slipID, Timestamp lsd, Timestamp led){
+		setLeaseID(leaseID);
+		setCustomerID(customerID);
+		setVin(vin);
+		setSlipID(slipID);
+		setLeaseStartDate(lsd);
+		setLeaseEndDate(led);
 	 }
 
 	/**
@@ -88,29 +93,29 @@ public class Lease {
 	/**
 	 * @return the leaseStartDate
 	 */
-	public String getLeaseStartDate() {
+	public Timestamp getLeaseStartDate() {
 		return leaseStartDate;
 	}
 
 	/**
-	 * @param leaseStartDate the leaseStartDate to set
+	 * @param lsd the leaseStartDate to set
 	 */
-	public void setLeaseStartDate(String leaseStartDate) {
-		this.leaseStartDate = leaseStartDate;
+	public void setLeaseStartDate(Timestamp lsd) {
+		this.leaseStartDate = lsd;
 	}
 
 	/**
 	 * @return the leaseEndDate
 	 */
-	public String getLeaseEndDate() {
+	public Timestamp getLeaseEndDate() {
 		return leaseEndDate;
 	}
 
 	/**
-	 * @param leaseEndDate the leaseEndDate to set
+	 * @param led the leaseEndDate to set
 	 */
-	public void setLeaseEndDate(String leaseEndDate) {
-		this.leaseEndDate = leaseEndDate;
+	public void setLeaseEndDate(Timestamp led) {
+		this.leaseEndDate = led;
 	}
 
 }
