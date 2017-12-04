@@ -42,6 +42,7 @@ public class DatabaseManager {
 	PreparedStatement deleteSlipRecord = null;
 	PreparedStatement deleteLeaseRecord = null;
 	PreparedStatement updateSlipAfterDeleteLease = null;
+	PreparedStatement updateSlipAfterCreateLease = null;
 	
 	PreparedStatement getDayCount = null;
 	
@@ -494,9 +495,15 @@ public class DatabaseManager {
 				results[i].setCustomerID(Integer.toString(resultSet.getInt(4)));
 				results[i].setLeaseStartDate(resultSet.getString(5));
 				results[i].setLeaseEndDate(resultSet.getString(6));
-				lease_id = resultSet.getInt(1);
-				slip_id = resultSet.getInt(2);
-				boat_vin = resultSet.getInt(3);
+				
+//				System.out.println("Lease ID is " + resultSet.getInt(1));
+//				System.out.println("Slip ID is " + resultSet.getInt(2));
+//				System.out.println("Vin is " + resultSet.getInt(3));
+//				System.out.println("Customer ID is " + resultSet.getInt(4));
+				
+				lease_id = Long.valueOf(resultSet.getInt(1));
+				slip_id = Long.valueOf(resultSet.getInt(2));
+				boat_vin = Long.valueOf(resultSet.getInt(3));
 			}
 			return results;
 		}
@@ -692,20 +699,41 @@ public class DatabaseManager {
 
 	}
 	
-	public void updateSlipStatus(Long slipID)
-	{
+	//restore slip status to be not leased/occupied
+	public void restoreSlipStatus(Long slipID){
 		try {
-			updateSlipAfterDeleteLease = connection.prepareStatement("UPDATE Slip SET is_leased = 'N', is_occupied = 'N' WHERE slip_id = ?");
-			updateSlipAfterDeleteLease.setLong(1,slipID);
-			//System.out.println(leaseID);
-			updateSlipAfterDeleteLease.executeUpdate();			
-			
-			JOptionPane.showMessageDialog(null, "Update Slip Status Completed.");
-		} catch (SQLException sqlex) {
-			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Delete SLip Failed", JOptionPane.ERROR_MESSAGE);
-		}
+			updateSlipAfterDeleteLease = connection.prepareStatement("UPDATE Slip SET is_leased = ?, is_occupied = ? WHERE slip_id = ?");
 
-	}
+			updateSlipAfterDeleteLease.setBoolean(1, false);
+			updateSlipAfterDeleteLease.setBoolean(2, false);
+			updateSlipAfterDeleteLease.setLong(3, slipID);
+
+			updateSlipAfterDeleteLease.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Successfully Restore Slip Status.");
+
+			}
+		catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Restore Slip Status Failed", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	
+	//renew slip status to be leased and occupied 
+	public void renewSlipStatus(Long slipID){
+		try {
+			updateSlipAfterCreateLease = connection.prepareStatement("UPDATE Slip SET is_leased = ?, is_occupied = ? WHERE slip_id = ?");
+
+			updateSlipAfterCreateLease.setBoolean(1, true);
+			updateSlipAfterCreateLease.setBoolean(2, true);
+			updateSlipAfterCreateLease.setLong(3, slipID);
+
+			updateSlipAfterCreateLease.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Successfully Updated Slip Status.");
+
+			}
+		catch (SQLException sqlex) {
+			JOptionPane.showMessageDialog(null, sqlex.getMessage(), "Update Slip Status Failed", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	
 	/**
 	 * Calculate the amount of days in a lease
